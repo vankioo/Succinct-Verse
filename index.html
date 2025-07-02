@@ -25,26 +25,27 @@
     </div>
     <div class="menu-right">
         <div id="notification-widget">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M2.67 11.89l.47-1.88A4.49 4.49 0 018 7.5a4.5 4.5 0 014.5 4.5c0 .34-.04.68-.11 1H13a1 1 0 001-1V4a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h.67zM2 13.33V4a2 2 0 012-2h8a2 2 0 012 2v7a2 2 0 01-2 2h-.67a5.5 5.5 0 00-10.66 0z"/>
-            </svg>
-            <span class="notification-badge"></span>
-            <div class="notification-dropdown">
-                <div class="dropdown-header">Notifications</div>
-                <ul id="notification-list">
-                </ul>
-            </div>
+        <!-- Chat Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6.414l-3.707 2.354A.5.5 0 0 1 2 15.914V2z"/>
+        </svg>
+        <span class="notification-badge"></span>
+        <div class="notification-dropdown">
+            <div class="dropdown-header">Notifications</div>
+            <ul id="notification-list"></ul>
         </div>
-        
-        <div class="cpu-widget">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                 <path d="M3.5 2A1.5 1.5 0 002 3.5v9A1.5 1.5 0 003.5 14h9a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0012.5 2h-9zM3 3.5A.5.5 0 013.5 3h9a.5.5 0 01.5.5v9a.5.5 0 01-.5.5h-9a.5.5 0 01-.5-.5v-9zM5 6.5A.5.5 0 015.5 6h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0 3A.5.5 0 015.5 9h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5z"/>
-                 <path d="M2 5.5a.5.5 0 01.5-.5H4a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5zm0 3A.5.5 0 012.5 8H4a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5zm12-3a.5.5 0 01-.5.5H12a.5.5 0 010-1h1.5a.5.5 0 01.5.5zm0 3a.5.5 0 01-.5.5H12a.5.5 0 010-1h1.5a.5.5 0 01.5.5z"/>
-            </svg>
-            <div class="cpu-bar-container">
-                <div class="cpu-bar"></div>
-            </div>
+    </div>
+
+    <!-- CPU WIDGET (Modern Chip Icon) -->
+    <div class="cpu-widget">
+        <!-- Chip Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M4 1a1 1 0 0 1 1 1v1h6V2a1 1 0 0 1 2 0v1h1a1 1 0 0 1 1 1v1h-1v6h1v1a1 1 0 0 1-1 1h-1v1a1 1 0 0 1-2 0v-1H5v1a1 1 0 0 1-2 0v-1H2a1 1 0 0 1-1-1v-1h1V5H1V4a1 1 0 0 1 1-1h1V2a1 1 0 0 1 1-1h1zM5 5v6h6V5H5z"/>
+        </svg>
+        <div class="cpu-bar-container">
+            <div class="cpu-bar"></div>
         </div>
+    </div>
         
         <span id="date-widget"></span>
         <span id="clock">10:10</span>
