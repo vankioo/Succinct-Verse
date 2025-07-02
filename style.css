@@ -70,11 +70,12 @@ body {
     color: var(--text-primary);
     padding: 10px;
     border-radius: 8px;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease-in-out;
 }
 
 .desktop-icon:hover {
     background-color: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05); /* Ikon sedikit membesar */
 }
 
 .desktop-icon img {
@@ -94,6 +95,7 @@ body {
 }
 .desktop-icon.disabled:hover {
     background-color: transparent;
+    transform: none;
 }
 
 
@@ -143,45 +145,8 @@ body {
     background-color: rgba(255, 255, 255, 0.3);
     margin: 0 5px;
 }
-/* ===== EFEK HOVER INTERAKTIF ===== */
 
-/* 1. Efek untuk Ikon di Desktop */
-.desktop-icon {
-    /* ... (kode yang sudah ada) ... */
-    transition: all 0.2s ease-in-out; /* Tambahkan ini untuk animasi halus */
-}
-
-.desktop-icon:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05); /* Ikon sedikit membesar */
-}
-
-/* 2. Efek untuk Item di Dock */
-/* Efek ini sudah ada di kode sebelumnya, ini hanya penegasan */
-.dock-item:hover {
-    transform: translateY(-15px) scale(1.2); /* Ikon melompat dan membesar */
-}
-
-/* 3. Efek untuk Item di Menu Bar Atas */
-.menu-left span:not(.app-name), 
-.menu-right i {
-    padding: 3px 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-}
-
-.menu-left span:hover:not(.app-name), 
-.menu-right i:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 4. Efek Kursor */
-/* Mengubah kursor menjadi pointer saat melewati elemen yang bisa diklik */
-.desktop-icon, .dock-item, .menu-left span, .menu-right i {
-    cursor: pointer;
-}
 /* ===== GAYA UNTUK LAYAR SAMBUTAN ===== */
-
 #welcome-screen {
     display: flex;
     justify-content: center;
@@ -193,7 +158,6 @@ body {
     height: 100%;
     background-color: #000;
     z-index: 9999;
-    /* Gunakan background yang sama dengan desktop untuk transisi halus */
     background-image: var(--background-image);
     background-size: cover;
     background-position: center;
@@ -239,14 +203,13 @@ body {
     filter: brightness(1.2);
 }
 
-/* Class untuk menyembunyikan konten utama */
 .hidden {
     display: none;
 }
-/* ===== GAYA UNTUK WIDGET NOTIFIKASI ===== */
 
+/* ===== GAYA UNTUK WIDGET NOTIFIKASI ===== */
 #notification-widget {
-    position: relative; /* Penting untuk posisi dropdown */
+    position: relative;
     padding: 3px 8px;
     border-radius: 4px;
     transition: background-color 0.2s ease;
@@ -254,7 +217,7 @@ body {
 }
 
 .notification-dropdown {
-    display: none; /* Sembunyikan dropdown secara default */
+    display: none;
     position: absolute;
     top: 100%;
     right: 0;
@@ -267,10 +230,6 @@ body {
     z-index: 100;
 }
 
-/* Tampilkan dropdown saat mouse menyentuh widget */
-#notification-widget:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
 #notification-widget:hover .notification-dropdown {
     display: block;
 }
@@ -318,14 +277,91 @@ body {
     line-height: 1.4;
 }
 
-
 .notification-badge {
-    position: absolute; /* Posisi relatif terhadap induknya */
-    top: -2px;          /* Sedikit ke atas dari pojok ikon */
-    right: -2px;        /* Sedikit ke kanan dari pojok ikon */
-    width: 8px;         /* Lebar titik */
-    height: 8px;        /* Tinggi titik */
-    background-color: #FF3B30; /* Warna merah notifikasi khas iOS */
-    border-radius: 50%; /* Membuatnya menjadi lingkaran sempurna */
-    border: 2px solid var(--menubar-bg); /* Memberi sedikit jarak dari ikon */
+    position: absolute;
+    top: -2px;
+    right: 2px;
+    width: 8px;
+    height: 8px;
+    background-color: #FF3B30;
+    border-radius: 50%;
+    border: 2px solid var(--menubar-bg);
+}
+
+/* ================================================= */
+/* GAYA BARU UNTUK IKON SVG & EFEK HOVER DI MENU BAR */
+/* ================================================= */
+
+.menu-right {
+    gap: 15px;
+}
+
+/* Gaya umum untuk semua SVG di menu kanan */
+.menu-right svg {
+    width: 17px;
+    height: 17px;
+    color: var(--text-secondary);
+    opacity: 0.9;
+}
+
+/* Gaya untuk ikon Apple di menu kiri */
+.apple-logo {
+    width: 17px;
+    height: 17px;
+    color: var(--text-primary);
+}
+
+/* Memberi warna pink pada ikon CPU & Chat */
+.cpu-widget svg, #notification-widget svg {
+    color: var(--accent-pink);
+}
+
+/* Gaya untuk teks tanggal dan jam */
+#date-widget, #clock {
+     color: var(--text-secondary);
+}
+
+/* Efek hover untuk semua elemen yang bisa diklik di menubar */
+.menu-left span:not(.app-name),
+.menu-right > *:not(span) {
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.menu-left span:hover:not(.app-name),
+.menu-right > *:not(span):hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Tampilan untuk CPU Meter */
+.cpu-widget {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cpu-bar-container {
+    width: 50px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.cpu-bar {
+    width: 40%;
+    height: 100%;
+    background-color: var(--accent-pink);
+    border-radius: 3px;
+    animation: cpu-load 3s infinite ease-in-out;
+}
+
+@keyframes cpu-load {
+    0% { width: 30%; }
+    25% { width: 80%; }
+    50% { width: 45%; }
+    75% { width: 90%; }
+    100% { width: 30%; }
 }
