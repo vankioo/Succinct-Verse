@@ -243,3 +243,77 @@ body {
 .hidden {
     display: none;
 }
+/* ===== GAYA UNTUK WIDGET NOTIFIKASI ===== */
+
+#notification-widget {
+    position: relative; /* Penting untuk posisi dropdown */
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.notification-dropdown {
+    display: none; /* Sembunyikan dropdown secara default */
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    width: 320px;
+    background-color: #2c2c2e;
+    border-radius: 12px;
+    border: 1px solid #444;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    z-index: 100;
+}
+
+/* Tampilkan dropdown saat mouse menyentuh widget */
+#notification-widget:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+#notification-widget:hover .notification-dropdown {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 12px 15px;
+    font-weight: 700;
+    border-bottom: 1px solid #444;
+}
+
+#notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 15px;
+    border-bottom: 1px solid #444;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.notification-content p {
+    margin: 0;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.notification-content span {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
