@@ -23,7 +23,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ===== 1. TOP MENU BAR (SUDAH DIPERBAIKI) ===== */
+/* ===== 1. TOP MENU BAR (FINAL) ===== */
 .top-menubar {
     position: fixed;
     top: 0;
@@ -55,7 +55,7 @@ body {
     gap: 8px; /* Jarak antar ikon/widget lebih rapat dan rapi */
 }
 
-/* Membuat semua elemen di menu (kiri & kanan) rata tengah dan bisa di-hover */
+/* Membuat semua elemen di menu rata tengah sempurna & bisa di-hover */
 .menu-left > *, .menu-right > * {
     display: flex;
     align-items: center;
@@ -89,7 +89,6 @@ body {
 
 /* Tampilan untuk CPU Meter */
 .cpu-widget { gap: 8px; }
-
 .cpu-bar-container {
     width: 50px;
     height: 10px;
@@ -97,20 +96,17 @@ body {
     border-radius: 3px;
     overflow: hidden;
 }
-
 .cpu-bar {
     width: 40%; height: 100%;
     background-color: var(--accent-pink);
     border-radius: 3px;
     animation: cpu-load 3s infinite ease-in-out;
 }
-
 @keyframes cpu-load {
     0% { width: 30%; } 25% { width: 80%; }
     50% { width: 45%; } 75% { width: 90%; }
     100% { width: 30%; }
 }
-
 
 /* ===== 2. DESKTOP AREA & ICONS ===== */
 .desktop {
@@ -152,7 +148,6 @@ body {
     background-color: transparent;
     transform: none;
 }
-
 
 /* ===== 3. DOCK ===== */
 .dock {
