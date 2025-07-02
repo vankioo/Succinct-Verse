@@ -115,7 +115,7 @@
             if (!notificationList) return; // Tambahan pengaman
             notificationList.innerHTML = ''; 
             const shuffled = chatNotifications.sort(() => 0.5 - Math.random());
-            let selected = shuffled.slice(0, 3);
+            let selected = shuffled.slice(0, 1);
             selected.forEach(notif => {
                 const item = `
                     <li class="notification-item">
