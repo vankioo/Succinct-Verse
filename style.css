@@ -317,3 +317,15 @@ body {
     color: var(--text-secondary);
     line-height: 1.4;
 }
+
+
+.notification-badge {
+    position: absolute; /* Posisi relatif terhadap induknya */
+    top: -2px;          /* Sedikit ke atas dari pojok ikon */
+    right: -2px;        /* Sedikit ke kanan dari pojok ikon */
+    width: 8px;         /* Lebar titik */
+    height: 8px;        /* Tinggi titik */
+    background-color: #FF3B30; /* Warna merah notifikasi khas iOS */
+    border-radius: 50%; /* Membuatnya menjadi lingkaran sempurna */
+    border: 2px solid var(--menubar-bg); /* Memberi sedikit jarak dari ikon */
+}
