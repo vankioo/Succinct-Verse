@@ -80,35 +80,91 @@
 
     </div> <audio id="background-music" src="assets/backsound.mp3" loop></audio>
 
-    <script>
-        // --- LOGIKA BARU UNTUK MUSIK & LAYAR MASUK ---
-        const enterBtn = document.getElementById('enter-btn');
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const mainApp = document.getElementById('main-app');
-        const music = document.getElementById('background-music');
+    // Ganti seluruh blok <script> Anda dengan yang ini
 
-        enterBtn.addEventListener('click', () => {
-            // Set volume ke level yang nyaman (misal 30%)
-            music.volume = 0.3;
-            // Putar musik setelah ada klik
-            music.play();
-
-            // Sembunyikan layar sambutan & tampilkan desktop
-            welcomeScreen.style.display = 'none';
-            mainApp.classList.remove('hidden');
-        });
-
-
-        // --- LOGIKA JAM (TETAP SAMA) ---
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+<script>
+    // ==========================================================
+    // --- LOGIKA BARU: NOTIFIKASI CHAT ACAK ---
+    // ==========================================================
+    
+    // ** ANDA BISA MENGATUR ISI NOTIFIKASI DI SINI **
+    const chatNotifications = [
+        {
+            name: 'ZK-Maximalist',
+            photo: 'assets/images/pfp1.png', // Ganti dengan path foto Anda
+            message: 'Just tried Proof of Synergy, the proof animation is so cool!'
+        },
+        {
+            name: 'Based Builder',
+            photo: 'assets/images/pfp2.png', // Ganti dengan path foto Anda
+            message: 'Anyone know how to optimize gas fees on L2s?'
+        },
+        {
+            name: 'Community OG',
+            photo: 'assets/images/pfp3.png', // Ganti dengan path foto Anda
+            message: 'Welcome to all the new members in the community! Glad to have you here.'
+        },
+        {
+            name: 'Shill-Slayer',
+            photo: 'assets/images/pfp4.png', // Ganti dengan path foto Anda
+            message: 'Remember to DYOR. Not financial advice.'
         }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+    ];
+
+    function showRandomNotifications() {
+        const notificationList = document.getElementById('notification-list');
+        notificationList.innerHTML = ''; // Kosongkan list
+
+        // Acak urutan notifikasi
+        const shuffled = chatNotifications.sort(() => 0.5 - Math.random());
+
+        // Ambil 3 notifikasi teratas yang sudah diacak
+        let selected = shuffled.slice(0, 3);
+
+        selected.forEach(notif => {
+            const item = `
+                <li class="notification-item">
+                    <img src="${notif.photo}" alt="${notif.name}">
+                    <div class="notification-content">
+                        <p>${notif.name}</p>
+                        <span>${notif.message}</span>
+                    </div>
+                </li>
+            `;
+            notificationList.innerHTML += item;
+        });
+    }
+
+
+    // --- LOGIKA LAMA (TETAP SAMA) ---
+    const enterBtn = document.getElementById('enter-btn');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const mainApp = document.getElementById('main-app');
+    const music = document.getElementById('background-music');
+
+    enterBtn.addEventListener('click', () => {
+        music.volume = 0.3;
+        music.play();
+        welcomeScreen.style.display = 'none';
+        mainApp.classList.remove('hidden');
+    });
+
+    function updateDateTime() {
+        const now = new Date();
+        const clockElement = document.getElementById('clock');
+        const dateElement = document.getElementById('date-widget');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        clockElement.textContent = `${hours}:${minutes}`;
+        const options = { weekday: 'short', day: 'numeric', month: 'short' };
+        dateElement.textContent = now.toLocaleDateString('en-US', options);
+    }
+    
+    // Panggil semua fungsi saat halaman dimuat
+    showRandomNotifications();
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
 
 </body>
 </html>
