@@ -6,8 +6,9 @@
     --text-primary: #FFFFFF;
     --text-secondary: #E0E0E0;
     --dock-bg: rgba(255, 255, 255, 0.1);
-    --menubar-bg: rgba(0, 0, 0, 0.2);
+    --menubar-bg: rgba(0, 0, 0, 0.25);
     --accent-pink: #FE11C5;
+    --hover-bg: rgba(255, 255, 255, 0.15);
 }
 
 body {
@@ -22,7 +23,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ===== 1. TOP MENU BAR ===== */
+/* ===== 1. TOP MENU BAR (SUDAH DIPERBAIKI) ===== */
 .top-menubar {
     position: fixed;
     top: 0;
@@ -44,11 +45,72 @@ body {
 .menu-left, .menu-right {
     display: flex;
     align-items: center;
+    height: 100%;
+}
+
+.menu-left {
     gap: 20px;
 }
-.menu-left .app-name {
-    font-weight: 700;
+.menu-right {
+    gap: 8px; /* Jarak antar ikon/widget lebih rapat dan rapi */
 }
+
+/* Membuat semua elemen di menu (kiri & kanan) rata tengah dan bisa di-hover */
+.menu-left > *, .menu-right > * {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    height: 100%;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+/* Efek hover hanya untuk elemen yang bisa diklik */
+.menu-left > span:not(.app-name):hover,
+.menu-right > div:hover,
+.menu-right > svg:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Teks tidak perlu efek hover */
+#date-widget, #clock {
+    cursor: default;
+}
+#date-widget:hover, #clock:hover {
+    background-color: transparent;
+}
+
+/* Mengatur warna dan ukuran ikon SVG */
+.apple-logo { color: var(--text-primary); }
+.menu-right svg { color: var(--text-secondary); }
+.cpu-widget svg, #notification-widget svg { color: var(--accent-pink); }
+.top-menubar svg { width: 16px; height: 16px; }
+
+/* Tampilan untuk CPU Meter */
+.cpu-widget { gap: 8px; }
+
+.cpu-bar-container {
+    width: 50px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.cpu-bar {
+    width: 40%; height: 100%;
+    background-color: var(--accent-pink);
+    border-radius: 3px;
+    animation: cpu-load 3s infinite ease-in-out;
+}
+
+@keyframes cpu-load {
+    0% { width: 30%; } 25% { width: 80%; }
+    50% { width: 45%; } 75% { width: 90%; }
+    100% { width: 30%; }
+}
+
 
 /* ===== 2. DESKTOP AREA & ICONS ===== */
 .desktop {
@@ -58,7 +120,6 @@ body {
     align-items: flex-start;
     gap: 30px;
 }
-
 .desktop-icon {
     display: flex;
     flex-direction: column;
@@ -71,24 +132,18 @@ body {
     padding: 10px;
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
+    cursor: pointer;
 }
-
 .desktop-icon:hover {
     background-color: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05); /* Ikon sedikit membesar */
+    transform: scale(1.05);
 }
-
-.desktop-icon img {
-    width: 70px;
-    height: 70px;
-}
-
+.desktop-icon img { width: 70px; height: 70px; }
 .desktop-icon span {
     font-size: 13px;
     font-weight: 500;
     text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
-
 .desktop-icon.disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -105,13 +160,7 @@ body {
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    height: 70px;
-    padding: 5px;
 }
-
 .dock-container {
     background: var(--dock-bg);
     backdrop-filter: blur(20px);
@@ -123,22 +172,14 @@ body {
     align-items: flex-end;
     gap: 10px;
 }
-
 .dock-item {
     width: 60px;
     height: 60px;
     transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
 }
-
-.dock-item img {
-    width: 100%;
-    height: 100%;
-}
-
-.dock-item:hover {
-    transform: translateY(-15px) scale(1.2);
-}
-
+.dock-item img { width: 100%; height: 100%; }
+.dock-item:hover { transform: translateY(-15px) scale(1.2); }
 .separator {
     width: 1px;
     height: 50px;
@@ -152,17 +193,14 @@ body {
     justify-content: center;
     align-items: center;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background-color: #000;
     z-index: 9999;
     background-image: var(--background-image);
     background-size: cover;
     background-position: center;
 }
-
 .welcome-box {
     text-align: center;
     color: white;
@@ -172,7 +210,6 @@ body {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .welcome-box h1 {
     font-size: 4em;
     font-weight: 700;
@@ -180,13 +217,11 @@ body {
     color: var(--accent-pink);
     font-family: 'Roboto Mono', monospace;
 }
-
 .welcome-box p {
     font-size: 1.2em;
     color: var(--text-secondary);
     margin: 10px 0 30px 0;
 }
-
 #enter-btn {
     padding: 12px 30px;
     font-size: 1.1em;
@@ -198,24 +233,11 @@ body {
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
-#enter-btn:hover {
-    filter: brightness(1.2);
-}
-
-.hidden {
-    display: none;
-}
+#enter-btn:hover { filter: brightness(1.2); }
+.hidden { display: none; }
 
 /* ===== GAYA UNTUK WIDGET NOTIFIKASI ===== */
-#notification-widget {
-    position: relative;
-    padding: 3px 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-    cursor: pointer;
-}
-
+#notification-widget { position: relative; }
 .notification-dropdown {
     display: none;
     position: absolute;
@@ -229,139 +251,23 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     z-index: 100;
 }
-
-#notification-widget:hover .notification-dropdown {
-    display: block;
-}
-
+#notification-widget:hover .notification-dropdown { display: block; }
 .dropdown-header {
     padding: 12px 15px;
     font-weight: 700;
     border-bottom: 1px solid #444;
 }
-
-#notification-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.notification-item {
-    display: flex;
-    gap: 12px;
-    padding: 12px 15px;
-    border-bottom: 1px solid #444;
-}
-.notification-item:last-child {
-    border-bottom: none;
-}
-
-.notification-item img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.notification-content p {
-    margin: 0;
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.notification-content span {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.4;
-}
-
+#notification-list { list-style: none; padding: 0; margin: 0; max-height: 400px; overflow-y: auto; }
+.notification-item { display: flex; gap: 12px; padding: 12px 15px; border-bottom: 1px solid #444; }
+.notification-item:last-child { border-bottom: none; }
+.notification-item img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.notification-content p { margin: 0; font-weight: 700; font-size: 14px; }
+.notification-content span { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
 .notification-badge {
     position: absolute;
-    top: -2px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
+    top: 0px; right: 2px;
+    width: 8px; height: 8px;
     background-color: #FF3B30;
     border-radius: 50%;
     border: 2px solid var(--menubar-bg);
-}
-
-/* ================================================= */
-/* GAYA BARU UNTUK IKON SVG & EFEK HOVER DI MENU BAR */
-/* ================================================= */
-
-.menu-right {
-    gap: 15px;
-}
-
-/* Gaya umum untuk semua SVG di menu kanan */
-.menu-right svg {
-    width: 17px;
-    height: 17px;
-    color: var(--text-secondary);
-    opacity: 0.9;
-}
-
-/* Gaya untuk ikon Apple di menu kiri */
-.apple-logo {
-    width: 17px;
-    height: 17px;
-    color: var(--text-primary);
-}
-
-/* Memberi warna pink pada ikon CPU & Chat */
-.cpu-widget svg, #notification-widget svg {
-    color: var(--accent-pink);
-}
-
-/* Gaya untuk teks tanggal dan jam */
-#date-widget, #clock {
-     color: var(--text-secondary);
-}
-
-/* Efek hover untuk semua elemen yang bisa diklik di menubar */
-.menu-left span:not(.app-name),
-.menu-right > *:not(span) {
-    padding: 3px 6px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-.menu-left span:hover:not(.app-name),
-.menu-right > *:not(span):hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Tampilan untuk CPU Meter */
-.cpu-widget {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.cpu-bar-container {
-    width: 50px;
-    height: 12px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.cpu-bar {
-    width: 40%;
-    height: 100%;
-    background-color: var(--accent-pink);
-    border-radius: 3px;
-    animation: cpu-load 3s infinite ease-in-out;
-}
-
-@keyframes cpu-load {
-    0% { width: 30%; }
-    25% { width: 80%; }
-    50% { width: 45%; }
-    75% { width: 90%; }
-    100% { width: 30%; }
 }
