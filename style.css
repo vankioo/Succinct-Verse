@@ -82,10 +82,11 @@ body {
 }
 
 /* Mengatur warna dan ukuran ikon SVG */
-.apple-logo { color: var(--text-primary); }
-.menu-right svg { color: var(--text-secondary); }
-.cpu-widget svg, #notification-widget svg { color: var(--accent-pink); }
-.top-menubar svg { width: 16px; height: 16px; }
+#notification-widget svg, .cpu-widget svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-pink);
+}
 
 /* Tampilan untuk CPU Meter */
 .cpu-widget { gap: 8px; }
