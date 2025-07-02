@@ -143,3 +143,40 @@ body {
     background-color: rgba(255, 255, 255, 0.3);
     margin: 0 5px;
 }
+/* ===== EFEK HOVER INTERAKTIF ===== */
+
+/* 1. Efek untuk Ikon di Desktop */
+.desktop-icon {
+    /* ... (kode yang sudah ada) ... */
+    transition: all 0.2s ease-in-out; /* Tambahkan ini untuk animasi halus */
+}
+
+.desktop-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05); /* Ikon sedikit membesar */
+}
+
+/* 2. Efek untuk Item di Dock */
+/* Efek ini sudah ada di kode sebelumnya, ini hanya penegasan */
+.dock-item:hover {
+    transform: translateY(-15px) scale(1.2); /* Ikon melompat dan membesar */
+}
+
+/* 3. Efek untuk Item di Menu Bar Atas */
+.menu-left span:not(.app-name), 
+.menu-right i {
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.menu-left span:hover:not(.app-name), 
+.menu-right i:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 4. Efek Kursor */
+/* Mengubah kursor menjadi pointer saat melewati elemen yang bisa diklik */
+.desktop-icon, .dock-item, .menu-left span, .menu-right i {
+    cursor: pointer;
+}
