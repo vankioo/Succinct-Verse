@@ -9,52 +9,81 @@
 </head>
 <body>
 
-    <header class="top-menubar">
-        <div class="menu-left">
-            <i class="fa-brands fa-apple"></i>
-            <span class="app-name">Succinct Verse</span>
-            <span>File</span>
-            <span>Edit</span>
-            <span>View</span>
-            <span>Go</span>
+    <div id="welcome-screen">
+        <div class="welcome-box">
+            <h1>Succinct Verse</h1>
+            <p>An interactive project universe.</p>
+            <button id="enter-btn">Click to Enter</button>
         </div>
-        <div class="menu-right">
-            <i class="fa-solid fa-wifi"></i>
-            <i class="fa-solid fa-battery-full"></i>
-            <span id="clock">10:10</span>
-        </div>
-    </header>
+    </div>
 
-    <main class="desktop">
-        <a href="https://URL-VERCEL-CONSTELATION-ANDA" target="_blank" class="desktop-icon">
-            <img src="assets/images/icon-constellation.png" alt="ZK Constellation">
-            <span>ZK Constellation</span>
-        </a>
+    <div id="main-app" class="hidden">
 
-        <a href="https://URL-VERCEL-GAME-ANDA" target="_blank" class="desktop-icon">
-            <img src="assets/images/icon-synergy.png" alt="Proof of Synergy">
-            <span>Proof of Synergy</span>
-        </a>
-        
-        <div class="desktop-icon disabled">
-            <img src="assets/images/icon-folder.png" alt="Coming Soon">
-            <span>Next Project</span>
-        </div>
-    </main>
+        <header class="top-menubar">
+            <div class="menu-left">
+                <i class="fa-brands fa-apple"></i>
+                <span class="app-name">Succinct Verse</span>
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Go</span>
+            </div>
+            <div class="menu-right">
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-full"></i>
+                <span id="clock">10:10</span>
+            </div>
+        </header>
 
-    <footer class="dock">
-        <div class="dock-container">
-            <div class="dock-item"><img src="assets/images/icon-finder.png" alt="Finder"></div>
-            <div class="dock-item"><img src="assets/images/icon-terminal.png" alt="Terminal"></div>
-            <div class="separator"></div>
-            <div class="dock-item"><img src="assets/images/icon-github.png" alt="GitHub"></div>
-            <div class="dock-item"><img src="assets/images/icon-twitter.png" alt="Twitter/X"></div>
-        </div>
-    </footer>
+        <main class="desktop">
+            <a href="https://URL-VERCEL-CONSTELATION-ANDA" target="_blank" class="desktop-icon">
+                <img src="assets/images/icon-constellation.png" alt="ZK Constellation">
+                <span>ZK Constellation</span>
+            </a>
 
-    <audio src="assets/backsound.mp3" autoplay loop></audio>
+            <a href="https://URL-VERCEL-GAME-ANDA" target="_blank" class="desktop-icon">
+                <img src="assets/images/icon-synergy.png" alt="Proof of Synergy">
+                <span>Proof of Synergy</span>
+            </a>
+            
+            <div class="desktop-icon disabled">
+                <img src="assets/images/icon-folder.png" alt="Coming Soon">
+                <span>Next Project</span>
+            </div>
+        </main>
+
+        <footer class="dock">
+            <div class="dock-container">
+                <div class="dock-item"><img src="assets/images/icon-finder.png" alt="Finder"></div>
+                <div class="dock-item"><img src="assets/images/icon-terminal.png" alt="Terminal"></div>
+                <div class="separator"></div>
+                <div class="dock-item"><img src="assets/images/icon-github.png" alt="GitHub"></div>
+                <div class="dock-item"><img src="assets/images/icon-twitter.png" alt="Twitter/X"></div>
+            </div>
+        </footer>
+
+    </div> <audio id="background-music" src="assets/backsound.mp3" loop></audio>
 
     <script>
+        // --- LOGIKA BARU UNTUK MUSIK & LAYAR MASUK ---
+        const enterBtn = document.getElementById('enter-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainApp = document.getElementById('main-app');
+        const music = document.getElementById('background-music');
+
+        enterBtn.addEventListener('click', () => {
+            // Set volume ke level yang nyaman (misal 30%)
+            music.volume = 0.3;
+            // Putar musik setelah ada klik
+            music.play();
+
+            // Sembunyikan layar sambutan & tampilkan desktop
+            welcomeScreen.style.display = 'none';
+            mainApp.classList.remove('hidden');
+        });
+
+
+        // --- LOGIKA JAM (TETAP SAMA) ---
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
