@@ -19,53 +19,36 @@
 
     <div id="main-app" class="hidden">
 
-       <header class="top-menubar">
+      <header class="top-menubar">
     <div class="menu-left">
-        <svg class="apple-logo" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8.68,1.22a2.82,2.82,0,0,0-2.36,1,2.54,2.54,0,0,0-1,2.08,2.7,2.7,0,0,0,1,2.15,2.5,2.5,0,0,0,2.23.86,2.74,2.74,0,0,0,2.35-1.13A2.4,2.4,0,0,0,12.2,4.3,4.9,4.9,0,0,0,8.68,1.22ZM11,5.49a2.12,2.12,0,0,1-1.28,2,2,2,0,0,1-1.42.4,1.8,1.8,0,0,1-1.29-.51,1.76,1.76,0,0,1-.52-1.24,2.06,2.06,0,0,1,.42-1.35,1.77,1.77,0,0,1,1.28-.56,1.89,1.89,0,0,1,1.5.64,1.52,1.52,0,0,1,.32,1V5.49Z"/>
-            <path d="M10.68,8.23a4.8,4.8,0,0,1-2.94-.9,4.52,4.52,0,0,1-1.74-2.19,5.29,5.29,0,0,0-2.62,1.5,5.34,5.34,0,0,0-1.5,3.63,5.65,5.65,0,0,0,1.58,4,5.25,5.25,0,0,0,4,1.6,5.39,5.39,0,0,0,4.19-1.82A5.53,5.53,0,0,0,13,11.2,5.14,5.14,0,0,1,10.68,8.23Z"/>
-        </svg>
         <span class="app-name">Succinct Verse</span>
-        <span>File</span>
-        <span>Edit</span>
-        <span>View</span>
-        <span>Go</span>
     </div>
     <div class="menu-right">
-    <div id="notification-widget">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M2.67 11.89l.47-1.88A4.49 4.49 0 018 7.5a4.5 4.5 0 014.5 4.5c0 .34-.04.68-.11 1H13a1 1 0 001-1V4a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h.67zM2 13.33V4a2 2 0 012-2h8a2 2 0 012 2v7a2 2 0 01-2 2h-.67a5.5 5.5 0 00-10.66 0z"/>
-        </svg>
-        <span class="notification-badge"></span>
-        <div class="notification-dropdown">
-            <div class="dropdown-header">Notifications</div>
-            <ul id="notification-list">
-            </ul>
+        <div id="notification-widget">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M2.67 11.89l.47-1.88A4.49 4.49 0 018 7.5a4.5 4.5 0 014.5 4.5c0 .34-.04.68-.11 1H13a1 1 0 001-1V4a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h.67zM2 13.33V4a2 2 0 012-2h8a2 2 0 012 2v7a2 2 0 01-2 2h-.67a5.5 5.5 0 00-10.66 0z"/>
+            </svg>
+            <span class="notification-badge"></span>
+            <div class="notification-dropdown">
+                <div class="dropdown-header">Notifications</div>
+                <ul id="notification-list">
+                </ul>
+            </div>
         </div>
-    </div>
-    
-    <div class="cpu-widget">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M3.5 2A1.5 1.5 0 002 3.5v9A1.5 1.5 0 003.5 14h9a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0012.5 2h-9zM3 3.5A.5.5 0 013.5 3h9a.5.5 0 01.5.5v9a.5.5 0 01-.5.5h-9a.5.5 0 01-.5-.5v-9zM5 6.5A.5.5 0 015.5 6h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0 3A.5.5 0 015.5 9h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5z"/>
-            <path d="M2 5.5a.5.5 0 01.5-.5H4a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5zm0 3A.5.5 0 012.5 8H4a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5zm12-3a.5.5 0 01-.5.5H12a.5.5 0 010-1h1.5a.5.5 0 01.5.5zm0 3a.5.5 0 01-.5.5H12a.5.5 0 010-1h1.5a.5.5 0 01.5.5z"/>
-        </svg>
-        <div class="cpu-bar-container">
-            <div class="cpu-bar"></div>
+        
+        <div class="cpu-widget">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                 <path d="M3.5 2A1.5 1.5 0 002 3.5v9A1.5 1.5 0 003.5 14h9a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0012.5 2h-9zM3 3.5A.5.5 0 013.5 3h9a.5.5 0 01.5.5v9a.5.5 0 01-.5.5h-9a.5.5 0 01-.5-.5v-9zM5 6.5A.5.5 0 015.5 6h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0 3A.5.5 0 015.5 9h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5z"/>
+                 <path d="M2 5.5a.5.5 0 01.5-.5H4a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5zm0 3A.5.5 0 012.5 8H4a.5.5 0 010 1H2.5a.5.5 0 01-.5-.5zm12-3a.5.5 0 01-.5.5H12a.5.5 0 010-1h1.5a.5.5 0 01.5.5zm0 3a.5.5 0 01-.5.5H12a.5.5 0 010-1h1.5a.5.5 0 01.5.5z"/>
+            </svg>
+            <div class="cpu-bar-container">
+                <div class="cpu-bar"></div>
+            </div>
         </div>
+        
+        <span id="date-widget"></span>
+        <span id="clock">10:10</span>
     </div>
-
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M15.384 6.115a.485.485 0 0 0-.047-.736C12.54 3.238 8.978 2.5 5.5 2.5c-3.478 0-7.04.238-9.837.879a.485.485 0 0 0-.048.736l.28.322a.485.485 0 0 0 .869.04C3.25 5.51 5.92 5 8 5s4.75.51 6.364 2.031a.485.485 0 0 0 .869-.04l.28-.322zM13.23 8.32a.485.485 0 0 0-.053-.746C11.532 6.42 9.493 6 8 6c-1.494 0-3.532.42-5.177 1.574a.485.485 0 0 0-.053.746l.28.322a.485.485 0 0 0 .875.02C4.908 7.372 6.46 7 8 7s3.092.372 4.234 1.166a.485.485 0 0 0 .875-.02l.28-.322zM8 12.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
-    </svg>
-    
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M2 4.5A1.5 1.5 0 0 1 3.5 3h6A1.5 1.5 0 0 1 11 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-6A1.5 1.5 0 0 1 2 11.5v-7zM3.5 4a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-6z"/>
-      <path d="M12 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-3z"/>
-    </svg>
-    
-    <span id="date-widget"></span>
-    <span id="clock">10:10</span>
-</div>
 </header>
         <main class="desktop">
             <a href="https://URL-VERCEL-CONSTELATION-ANDA" target="_blank" class="desktop-icon">
