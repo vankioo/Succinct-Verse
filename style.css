@@ -1,0 +1,281 @@
+/* --- General Styles (Modifikasi) --- */
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font lebih modern */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Inspirasi background dari Succinct ZK-Forge */
+    background: radial-gradient(circle at top left, #1a2a6c, transparent),
+                radial-gradient(circle at bottom right, #b21f1f, transparent),
+                linear-gradient(to right, #0a0a0a, #0d0d0d); /* Dark, subtle gradient */
+    background-size: 150% 150%;
+    color: #e0e0e0; /* Warna teks lebih terang untuk kontras */
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-container {
+    background-color: rgba(15, 15, 15, 0.9); /* Lebih gelap, sedikit transparan */
+    border-radius: 12px; /* Sedikit lebih kecil dari 15px */
+    padding: 30px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), 0 0 50px rgba(128, 0, 128, 0.2); /* Dual glow */
+    text-align: center;
+    max-width: 1200px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Jarak antar elemen */
+    position: relative;
+    border: 1px solid rgba(0, 255, 255, 0.2); /* Garis tepi tipis */
+}
+
+.game-title {
+    font-size: 3.5em; /* Lebih besar */
+    margin-bottom: 25px;
+    color: #00e6e6; /* Aqua glow */
+    text-shadow: 0 0 15px #00e6e6, 0 0 25px rgba(0, 255, 255, 0.5); /* Lebih kuat */
+    letter-spacing: 2px;
+}
+
+.header-info {
+    font-size: 1.3em; /* Lebih besar sedikit */
+}
+
+.gas-meter span, .level-info span {
+    color: #9aff2a; /* Warna hijau neon untuk data */
+    font-weight: bold;
+    text-shadow: 0 0 8px #9aff2a;
+}
+
+/* --- Game Area Layout --- */
+.game-area {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Mengatur item di bagian atas */
+    gap: 40px; /* Jarak lebih besar */
+    flex-wrap: wrap;
+}
+
+/* --- Puzzle Board (Modifikasi) --- */
+.puzzle-board {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), 50px);
+    grid-template-rows: repeat(var(--grid-rows), 50px);
+    border: 2px solid #00e6e6; /* Aqua border */
+    background-color: rgba(0, 0, 0, 0.7); /* Background gelap */
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    border-radius: 8px; /* Sudut sedikit membulat */
+    min-width: 250px;
+    min-height: 250px;
+    position: relative;
+    overflow: hidden;
+    /* Tambahan untuk visualisasi pattern */
+    background-image: linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px; /* Sesuai CELL_SIZE */
+}
+
+.grid-cell {
+    width: 50px;
+    height: 50px;
+    border: 0.5px dashed rgba(0, 255, 255, 0.05); /* Garis sangat tipis */
+    box-sizing: border-box;
+}
+
+/* Target Pattern highlighting (Modifikasi) */
+.puzzle-board .target-cell {
+    background-color: rgba(0, 255, 255, 0.1); /* Aqua transparan */
+    border: 1px dashed rgba(0, 255, 255, 0.2); /* Garis putus-putus aqua */
+}
+
+/* --- Block Palette (Modifikasi) --- */
+.block-palette {
+    display: flex; /* Flexbox untuk mengatur balok di palet */
+    flex-wrap: wrap;
+    gap: 20px; /* Jarak antar balok di palet */
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 0, 128, 0.3); /* Ungu transparan */
+    min-height: 250px; /* Ukuran minimum agar terlihat */
+    justify-content: center;
+    align-content: flex-start; /* Untuk mengisi dari atas */
+    box-shadow: 0 0 15px rgba(128, 0, 128, 0.3);
+}
+
+/* --- Individual Blocks (Modifikasi) --- */
+.block {
+    position: relative; /* Balok di palet: relative, agar flow normal */
+    /* Akan berubah jadi absolute saat di-drag ke puzzle-board oleh JS */
+    background-color: #6a0572; /* Deep purple */
+    border: 2px solid #a030d9;
+    cursor: grab;
+    transition: transform 0.1s ease-out;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.5), 0 0 15px rgba(0, 255, 255, 0.3); /* Dual glow */
+    z-index: 10;
+    display: flex; /* Untuk menampung sel internal jika ada */
+    flex-wrap: wrap; /* Jika balok punya sub-div untuk bentuk */
+}
+
+.block.dragging {
+    position: absolute; /* Saat dragging, jadi absolute */
+    cursor: grabbing;
+    opacity: 0.8;
+    z-index: 100;
+}
+
+/* Block cells inside complex blocks (if implemented) */
+.block-cell {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.1); /* Warna dasar sel di dalam balok */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
+}
+
+/* Warna balok dari JS akan override ini, tapi ini sebagai fallback */
+.block.color-b1 { background-color: #FF5733; box-shadow: 0 0 10px #FF5733; border-color: #FF8D6A; }
+.block.color-b2 { background-color: #33FF57; box-shadow: 0 0 10px #33FF57; border-color: #6AFF8D; }
+.block.color-b3 { background-color: #3357FF; box-shadow: 0 0 10px #3357FF; border-color: #6A8DFF; }
+.block.color-b4 { background-color: #FF33A1; box-shadow: 0 0 10px #FF33A1; border-color: #FF6AB2; }
+/* ... tambahkan untuk setiap ID balok dan warnanya */
+
+
+/* --- Generate Proof Button (Modifikasi) --- */
+#generateProofBtn {
+    background-color: #1aff8c; /* Hijau neon */
+    color: #1a1a1a; /* Teks gelap */
+    padding: 18px 35px; /* Lebih besar */
+    font-size: 1.8em; /* Lebih besar */
+    border: none;
+    border-radius: 10px; /* Sedikit lebih membulat */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 25px;
+    box-shadow: 0 0 20px rgba(26, 255, 140, 0.7), 0 0 40px rgba(26, 255, 140, 0.4); /* Glow hijau */
+    font-weight: bold;
+}
+
+#generateProofBtn:hover {
+    background-color: #00e676; /* Hijau lebih gelap */
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(26, 255, 140, 0.9), 0 0 50px rgba(26, 255, 140, 0.6);
+}
+
+#generateProofBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 0 15px rgba(26, 255, 140, 0.5);
+}
+
+/* --- Verification Board (Modifikasi) --- */
+.verification-board {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffcc00; /* Kuning keemasan */
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 35px;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+}
+
+.verification-board h3 {
+    color: #ffcc00;
+    text-shadow: 0 0 10px #ffcc00;
+    font-size: 1.5em;
+}
+
+.proof-slot {
+    width: 90px; /* Sedikit lebih besar */
+    height: 90px;
+    border: 2px dashed rgba(255, 204, 0, 0.5);
+    margin: 15px auto;
+    border-radius: 8px; /* Agak membulat */
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 204, 0, 0.05); /* Sedikit kuning transparan */
+}
+
+/* --- Proof Object Animation Styles (Modifikasi) --- */
+/* Pastikan warna glow konsisten dengan tema */
+.proof-object {
+    background: linear-gradient(45deg, #00e6e6, #a030d9); /* Aqua ke Ungu */
+    box-shadow: 0 0 25px #00e6e6, 0 0 50px #a030d9;
+}
+
+@keyframes compressAndEmergence {
+    /* ... (keyframes sebelumnya) ... */
+    30% { /* Fase Kompresi - Puncak pusaran */
+        box-shadow: 0 0 40px #00e6e6, 0 0 80px #a030d9;
+        filter: brightness(2.5) saturate(2); /* Lebih terang dan jenuh */
+    }
+    100% {
+        box-shadow: 0 0 25px #00e6e6, 0 0 50px #a030d9;
+        /* Untuk kristal yang lebih kompleks, bisa pakai polygon */
+        clip-path: polygon(50% 0%, 85% 25%, 85% 75%, 50% 100%, 15% 75%, 15% 25%); /* Contoh heksagon/diamond */
+        background: linear-gradient(135deg, #00e6e6, #a030d9);
+    }
+}
+
+@keyframes travelToVerification {
+    /* ... (keyframes sebelumnya) ... */
+    100% {
+        box-shadow: 0 0 25px #00e6e6, 0 0 50px #a030d9;
+    }
+}
+
+@keyframes validateEffect {
+    /* ... (keyframes sebelumnya) ... */
+    50% {
+        box-shadow: 0 0 50px #00e6e6, 0 0 100px #a030d9;
+        filter: brightness(3);
+    }
+    100% {
+        box-shadow: 0 0 25px #00e6e6, 0 0 50px #a030d9;
+    }
+}
+
+.verification-board.validating-glow {
+    animation: boardGlow 1s forwards;
+}
+
+@keyframes boardGlow {
+    0% { box-shadow: 0 0 20px rgba(255, 204, 0, 0.5); }
+    50% { box-shadow: 0 0 40px #ffcc00, 0 0 80px rgba(255, 204, 0, 0.8), 0 0 100px rgba(255, 0, 255, 0.5); } /* Lebih terang dan ada sentuhan ungu */
+    100% { box-shadow: 0 0 20px rgba(255, 204, 0, 0.5); }
+}
+
+/* Modal Styling */
+.modal-content {
+    background-color: #1a1a1a; /* Lebih gelap */
+    border: 2px solid #00e6e6;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+}
+
+.modal-content h2 {
+    color: #00e6e6;
+    text-shadow: 0 0 10px #00e6e6;
+}
+
+.modal-content button {
+    background-color: #9aff2a; /* Hijau neon */
+    color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(154, 255, 42, 0.5);
+}
+
+.modal-content button:hover {
+    background-color: #7ccc20;
+    box-shadow: 0 0 15px rgba(154, 255, 42, 0.7);
+}
+
+/* Overlay Effect */
+.overlay-effect {
+    background-color: rgba(0, 0, 0, 0.7); /* Lebih gelap */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    /* ... (media query sebelumnya) ... */
+    .game-title {
+        font-size: 2.5em;
+    }
+}
