@@ -154,7 +154,8 @@ body {
     transform: none;
 }
 
-/* ===== 3. DOCK ===== */
+/* ===== 3. DOCK (FIXED) ===== */
+/* BAGIAN INI SUDAH DIPERBAIKI */
 .dock {
     position: fixed;
     bottom: 10px;
@@ -173,18 +174,36 @@ body {
     gap: 10px;
 }
 .dock-item {
-    width: 60px;
-    height: 60px;
-    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
+    width: 100px;
+    height: 80px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    padding-top: 5px;
     cursor: pointer;
 }
-.dock-item img { width: 100%; height: 100%; }
-.dock-item:hover { transform: translateY(-15px) scale(1.2); }
+.dock-item i {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+.dock-item span {
+    font-size: 12px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    white-space: nowrap;
+}
+.dock-item:hover {
+    transform: translateY(-15px) scale(1.2);
+}
 .separator {
     width: 1px;
     height: 50px;
     background-color: rgba(255, 255, 255, 0.3);
     margin: 0 5px;
+    align-self: center;
 }
 
 /* ===== GAYA UNTUK LAYAR SAMBUTAN ===== */
