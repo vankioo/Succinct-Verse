@@ -1,17 +1,33 @@
 // !! GANTI DENGAN KONFIGURASI FIREBASE ANDA !!
 const firebaseConfig = {
-    apiKey: "MASUKKAN_API_KEY_ANDA",
-    databaseURL: "MASUKKAN_DATABASE_URL_ANDA",
-    // ...dan sisa config Anda
+    apiKey: "AIzaSyAKuMy8U2qHAS6tzToGIELeSymzo54CJQA",
+  authDomain: "zk-forge.firebaseapp.com",
+  databaseURL: "https://zk-forge-default-rtdb.firebaseio.com",
+  projectId: "zk-forge",
+  storageBucket: "zk-forge.firebasestorage.app",
+  messagingSenderId: "742831580717",
+  appId: "1:742831580717:web:ec64a8eb2280945d337aa4",
+  measurementId: "G-P9LG4YMFCN"
+
 };
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// KODE LAMA ANDA (Welcome screen, clock, notifications, etc.)
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (salin semua deklarasi elemen DOM dari kode homepage Anda) ...
+    // --- Elemen DOM ---
+    const enterBtn = document.getElementById('enter-btn');
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const mainApp = document.getElementById('main-app');
+    const music = document.getElementById('background-music');
 
-    // --- ELEMEN DOM UNTUK FITUR BARU ---
+    // Fitur Notifikasi
+    const notificationList = document.getElementById('notification-list');
+
+    // Fitur Jam & Tanggal
+    const clockElement = document.getElementById('clock');
+    const dateElement = document.getElementById('date-widget');
+    
+    // Fitur Shared Canvas
     const dockCanvasBtn = document.getElementById('dock-canvas-btn');
     const canvasModal = document.getElementById('canvas-modal');
     const closeCanvasBtn = canvasModal.querySelector('.close-btn');
@@ -20,11 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const toolbar = document.querySelector('.canvas-toolbar');
     const clearCanvasBtn = document.getElementById('clear-canvas-btn');
 
+    // Fitur Global Stats
     const dockStatsBtn = document.getElementById('dock-stats-btn');
     const statsModal = document.getElementById('stats-modal');
     const closeStatsBtn = statsModal.querySelector('.close-btn');
+    
+    // --- Logika Welcome Screen & Musik ---
+    if (enterBtn) {
+        enterBtn.addEventListener('click', () => {
+            music.volume = 0.3;
+            music.play().catch(() => {});
+            welcomeScreen.style.display = 'none';
+            mainApp.classList.remove('hidden');
+        });
+    }
 
-    // --- LOGIKA SHARED CANVAS ---
+    // --- Logika Jam, Notifikasi, dll. ---
+    function updateDateTime() { /* ... kode jam ... */ }
+    function showRandomNotifications() { /* ... kode notifikasi ... */ }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    showRandomNotifications();
+
+    // --- Logika Shared Canvas ---
     let isDrawing = false, lastX = 0, lastY = 0, drawColor = 'white';
     function setupCanvas() {
         const dpr = window.devicePixelRatio || 1;
@@ -38,13 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
         drawCtx.strokeStyle = color; drawCtx.beginPath();
         drawCtx.moveTo(x1, y1); drawCtx.lineTo(x2, y2); drawCtx.stroke();
     }
-    database.ref('canvasLines').on('child_added', (snapshot) => {
-        const line = snapshot.val();
-        drawLine(line.x1, line.y1, line.x2, line.y2, line.color);
-    });
-    database.ref('canvasLines').on('child_removed', () => {
-        drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-    });
+    database.ref('canvasLines').on('child_added', (s) => { if(s.val()) drawLine(s.val().x1, s.val().y1, s.val().x2, s.val().y2, s.val().color); });
+    database.ref('canvasLines').on('child_removed', () => drawCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height));
     dockCanvasBtn.addEventListener('click', () => { setupCanvas(); canvasModal.style.display = 'flex'; });
     closeCanvasBtn.addEventListener('click', () => canvasModal.style.display = 'none');
     clearCanvasBtn.addEventListener('click', () => { if (confirm('Clear canvas for everyone?')) database.ref('canvasLines').remove(); });
@@ -65,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     drawingCanvas.addEventListener('mouseup', () => isDrawing = false);
     drawingCanvas.addEventListener('mouseleave', () => isDrawing = false);
 
-    // --- LOGIKA GLOBAL STATS ---
+    // --- Logika Global Stats ---
     function fetchGlobalStats() {
         const statsRef = database.ref('global_stats');
         statsRef.on('value', (snapshot) => {
@@ -79,7 +108,5 @@ document.addEventListener('DOMContentLoaded', () => {
     dockStatsBtn.addEventListener('click', () => statsModal.style.display = 'flex');
     closeStatsBtn.addEventListener('click', () => statsModal.style.display = 'none');
 
-    // --- PANGGIL FUNGSI-FUNGSI ANDA ---
     fetchGlobalStats();
-    // ... (panggil fungsi jam, notifikasi, dll yang sudah ada)
 });
