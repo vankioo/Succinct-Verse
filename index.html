@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Succinct Verse</title>
-
     <link rel="stylesheet" type="text/css" href="assets/flaticon/flaticon.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -117,13 +116,15 @@
             // --- LOGIKA NOTIFIKASI, MUSIK, JAM, DLL. ---
             const chatNotifications = [{ name: 'Yinger UwU', photo: 'assets/images/yinger.png', message: 'Dont forget succinct rockstars!' }, { name: 'Addyyeah', photo: 'assets/images/addy.jpg', message: 'Mainnet soon yeahh' }, { name: 'Zaharon bruhh', photo: 'assets/images/zaharon.jpg', message: 'Log in bruhh, lets play together' }, { name: 'Duskieee', photo: 'assets/images/duskie.jpg', message: 'Thanks for joining!' }];
             function showRandomNotifications() { const notificationList = document.getElementById('notification-list'); if (!notificationList) return; notificationList.innerHTML = ''; const shuffled = chatNotifications.sort(() => 0.5 - Math.random()); let selected = shuffled.slice(0, 1); selected.forEach(notif => { const item = `<li class="notification-item"><img src="${notif.photo}" alt="${notif.name}"><div class="notification-content"><p>${notif.name}</p><span>${notif.message}</span></div></li>`; notificationList.innerHTML += item; }); }
+            
+            // BAGIAN YANG DIPERBAIKI: Tombol Enter sekarang berfungsi lagi
             const enterBtn = document.getElementById('enter-btn');
             const welcomeScreen = document.getElementById('welcome-screen');
             const mainApp = document.getElementById('main-app');
             const music = document.getElementById('background-music');
             if (enterBtn) { enterBtn.addEventListener('click', () => { if (music) { music.volume = 0.3; music.play(); } welcomeScreen.style.display = 'none'; mainApp.classList.remove('hidden'); }); }
+            
             function updateDateTime() { const now = new Date(); const clockElement = document.getElementById('clock'); const dateElement = document.getElementById('date-widget'); if (!clockElement || !dateElement) return; const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); clockElement.textContent = `${hours}:${minutes}`; const options = { weekday: 'short', day: 'numeric', month: 'short' }; dateElement.textContent = now.toLocaleDateString('en-US', options); }
-            showRandomNotifications(); setInterval(updateDateTime, 1000); updateDateTime();
             
             // --- LOGIKA UMUM UNTUK SEMUA MODAL/POPUP ---
             function setupModal(buttonId, modalId, closeButtonId, onOpen = null) {
@@ -167,14 +168,13 @@
 
             // --- PENGATURAN COMMUNITY BOARD MODAL ---
             const canvas = document.getElementById('drawing-canvas');
-            const colorPicker = document.getElementById('colorPicker');
-            const brushSize = document.getElementById('brushSize');
-            const eraserBtn = document.getElementById('eraserBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            const submitArtBtn = document.getElementById('submitArtBtn');
-            
-            // Cek jika elemen canvas ada sebelum melanjutkan
             if (canvas) {
+                const colorPicker = document.getElementById('colorPicker');
+                const brushSize = document.getElementById('brushSize');
+                const eraserBtn = document.getElementById('eraserBtn');
+                const clearBtn = document.getElementById('clearBtn');
+                const submitArtBtn = document.getElementById('submitArtBtn');
+                
                 const ctx = canvas.getContext('2d');
                 let isDrawing = false;
                 let isEraser = false;
@@ -183,7 +183,7 @@
                     const modalContent = canvas.closest('.modal-content');
                     const newWidth = modalContent.querySelector('.drawing-area').clientWidth;
                     canvas.width = newWidth;
-                    canvas.height = 400; // Tinggi kanvas
+                    canvas.height = 400;
                     ctx.lineJoin = 'round';
                     ctx.lineCap = 'round';
                 }
@@ -230,9 +230,13 @@
                     canvas.style.pointerEvents = 'none'; 
                 });
                 
-                // Panggil setupModal untuk Community Board dengan fungsi setupCanvas
                 setupModal('open-community-board', 'community-board-modal', 'close-community-modal', setupCanvas);
             }
+
+            // Panggil semua fungsi inisialisasi di akhir
+            showRandomNotifications();
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
         });
     </script>
 </body>
