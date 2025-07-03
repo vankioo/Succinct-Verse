@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Succinct Verse</title>
+
     <link rel="stylesheet" type="text/css" href="assets/flaticon/flaticon.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -68,7 +69,7 @@
                     <i class="fi fi-rr-shield-check"></i> <span>SP1 Verifier</span>
                 </a>
                 <div class="separator"></div>
-                <a href="https://twitter.com/Duskiesoul" target="_blank" class="dock-item" title="Twitter/X">
+                <a href="https://twitter.com/vankioo" target="_blank" class="dock-item" title="Twitter/X">
                     <i class="fi fi-brands-twitter-x"></i> <span>Twitter/X</span>
                 </a>
                 <a href="https://discord.gg/succinctlabs" target="_blank" class="dock-item" title="Discord">
@@ -85,14 +86,26 @@
         <div class="modal-content">
             <button id="close-sp1-modal" class="modal-close-btn">&times;</button>
             <h2>SP1 Verifier</h2>
-            <p>Simulate program execution and ZK proof generation.</p>
+            <p>Simulating program execution and ZK proof generation.</p>
             <div id="sp1-console" class="console"></div>
+        </div>
+    </div>
+    
+    <div id="community-board-modal" class="modal-container hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button id="close-community-modal" class="modal-close-btn">&times;</button>
+            <h2>Community Board</h2>
+            <p>Leave your mark on this shared canvas!</p>
+            <div id="drawing-canvas-placeholder">
+                <span>Drawing feature coming soon...</span>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- LOGIKA NOTIFIKASI CHAT ACAK ---
+            // --- LOGIKA NOTIFIKASI, MUSIK, JAM, DLL. ---
             const chatNotifications = [
                 { name: 'Yinger UwU', photo: 'assets/images/yinger.png', message: 'Dont forget succinct rockstars!' },
                 { name: 'Addyyeah', photo: 'assets/images/addy.jpg', message: 'Mainnet soon yeahh' },
@@ -110,8 +123,6 @@
                     notificationList.innerHTML += item;
                 });
             }
-
-            // --- LOGIKA TOMBOL MASUK & MUSIK ---
             const enterBtn = document.getElementById('enter-btn');
             const welcomeScreen = document.getElementById('welcome-screen');
             const mainApp = document.getElementById('main-app');
@@ -126,8 +137,6 @@
                     mainApp.classList.remove('hidden');
                 });
             }
-
-            // --- LOGIKA JAM & TANGGAL ---
             function updateDateTime() {
                 const now = new Date();
                 const clockElement = document.getElementById('clock');
@@ -140,20 +149,17 @@
                 dateElement.textContent = now.toLocaleDateString('en-US', options);
             }
 
-            // --- LOGIKA UNTUK POPUP SP1 VERIFIER ---
+            // --- PENGONTROL SEMUA POPUP/MODAL ---
+            
+            // 1. Logika untuk SP1 Verifier
             const sp1Button = document.getElementById('open-sp1-verifier');
             const sp1Modal = document.getElementById('sp1-verifier-modal');
-            const closeModalButton = document.getElementById('close-sp1-modal');
+            const closeSp1ModalButton = document.getElementById('close-sp1-modal');
             const consoleOutput = document.getElementById('sp1-console');
             const verificationSteps = [
-                "Initializing SP1 ZKVM...",
-                "Compiling program to bytecode...",
-                "Executing program & generating proof...",
-                "Proof generation complete. [Size: 8.2 KB]",
-                "Verifying proof on-chain...",
-                "✅ Execution Verified.",
+                "Initializing SP1 ZKVM...", "Compiling program...", "Generating proof...",
+                "Proof generation complete. [Size: 8.2 KB]", "Verifying proof...", "✅ Execution Verified."
             ];
-
             function runConsoleAnimation() {
                 if (!consoleOutput) return;
                 consoleOutput.innerHTML = '';
@@ -166,35 +172,62 @@
                         consoleOutput.appendChild(line);
                         consoleOutput.scrollTop = consoleOutput.scrollHeight;
                         i++;
-                    } else {
-                        clearInterval(interval);
-                    }
+                    } else { clearInterval(interval); }
                 }, 800);
             }
-
-            function openModal() {
-                if (sp1Modal) {
-                    sp1Modal.classList.remove('hidden');
-                    sp1Modal.classList.add('visible');
-                    runConsoleAnimation();
-                }
-            }
-
-            function closeModal() {
-                if (sp1Modal) {
-                    sp1Modal.classList.remove('visible');
-                    setTimeout(() => sp1Modal.classList.add('hidden'), 300);
-                }
-            }
-            
             if (sp1Button) {
-                sp1Button.addEventListener('click', openModal);
+                sp1Button.addEventListener('click', () => {
+                    if (sp1Modal) {
+                        sp1Modal.classList.remove('hidden');
+                        sp1Modal.classList.add('visible');
+                        runConsoleAnimation();
+                    }
+                });
             }
-            if (closeModalButton) {
-                closeModalButton.addEventListener('click', closeModal);
+            if (closeSp1ModalButton) {
+                closeSp1ModalButton.addEventListener('click', () => {
+                    if (sp1Modal) {
+                        sp1Modal.classList.remove('visible');
+                        setTimeout(() => sp1Modal.classList.add('hidden'), 300);
+                    }
+                });
             }
             if (sp1Modal) {
-                sp1Modal.querySelector('.modal-overlay').addEventListener('click', closeModal);
+                sp1Modal.querySelector('.modal-overlay').addEventListener('click', () => {
+                     if (sp1Modal) {
+                        sp1Modal.classList.remove('visible');
+                        setTimeout(() => sp1Modal.classList.add('hidden'), 300);
+                    }
+                });
+            }
+
+            // 2. Logika untuk Community Board
+            const communityButton = document.getElementById('open-community-board');
+            const communityModal = document.getElementById('community-board-modal');
+            const closeCommunityModalButton = document.getElementById('close-community-modal');
+            if (communityButton) {
+                communityButton.addEventListener('click', () => {
+                    if (communityModal) {
+                        communityModal.classList.remove('hidden');
+                        communityModal.classList.add('visible');
+                    }
+                });
+            }
+            if (closeCommunityModalButton) {
+                closeCommunityModalButton.addEventListener('click', () => {
+                     if (communityModal) {
+                        communityModal.classList.remove('visible');
+                        setTimeout(() => communityModal.classList.add('hidden'), 300);
+                    }
+                });
+            }
+            if (communityModal) {
+                communityModal.querySelector('.modal-overlay').addEventListener('click', () => {
+                     if (communityModal) {
+                        communityModal.classList.remove('visible');
+                        setTimeout(() => communityModal.classList.add('hidden'), 300);
+                    }
+                });
             }
 
             // Panggil semua fungsi inisialisasi di akhir
