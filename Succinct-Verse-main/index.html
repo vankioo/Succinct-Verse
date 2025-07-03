@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succinct Verse</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="welcome-box">
+            <h1>Succinct Verse</h1>
+            <p>An interactive project universe.</p>
+            <button id="enter-btn">Click to Enter</button>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+
+      <header class="top-menubar">
+    <div class="menu-left">
+        <span class="app-name">Succinct Verse</span>
+    </div>
+    <div class="menu-right">
+        <div id="notification-widget">
+        <!-- Chat Icon -->
+       <!-- Chat Icon with Balanced ViewBox -->
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6.414l-3.707 2.354A.5.5 0 0 1 2 15.914V2z"/>
+</svg>
+
+        <span class="notification-badge"></span>
+        <div class="notification-dropdown">
+            <div class="dropdown-header">Notifications</div>
+            <ul id="notification-list"></ul>
+        </div>
+    </div>
+
+    <!-- CPU WIDGET (Modern Chip Icon) -->
+    <div class="cpu-widget">
+        <!-- Chip Icon -->
+       <!-- Icon CPU Baru (modern & clean) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
+  <path d="M9 2v2H7V2H5v2H4a2 2 0 0 0-2 2v2h2v8H2v2a2 2 0 0 0 2 2h1v2h2v-2h2v2h2v-2h8v2h2v-2h2a2 2 0 0 0 2-2v-2h-2V8h2V6a2 2 0 0 0-2-2h-1V2h-2v2h-2V2h-2v2H9V2H7zm0 4h8v12H7V6z"/>
+</svg>
+        <div class="cpu-bar-container">
+            <div class="cpu-bar"></div>
+        </div>
+    </div>
+        
+        <span id="date-widget"></span>
+        <span id="clock">10:10</span>
+    </div>
+</header>
+        <main class="desktop">
+            <a href="https://succinct-network.vercel.app/" target="_blank" class="desktop-icon">
+                <img src="assets/images/icon1.png" alt="ZK Constellation">
+                <span>ZK Constellation</span>
+            </a>
+
+            <a href="#" target="_blank" class="desktop-icon">
+                <img src="assets/images/icon3.png" alt="Proof of Synergy">
+                <span>Proof of Synergy</span>
+            </a>
+            
+             <a href="https://succinct-zk-forge.vercel.app/" target="_blank" class="desktop-icon">
+                <img src="assets/images/icon2.png" alt="ZK Forge">
+                <span>ZK Forge</span>
+            </a>
+        </main>
+
+        <footer class="dock">
+            <div class="dock-container">
+                <div class="dock-item"><img src="assets/images/icon-finder.png" alt="Finder"></div>
+                <div class="dock-item"><img src="assets/images/icon-terminal.png" alt="Terminal"></div>
+                <div class="separator"></div>
+                <div class="dock-item"><img src="assets/images/icon-github.png" alt="GitHub"></div>
+                <div class="dock-item"><img src="assets/images/icon-twitter.png" alt="Twitter/X"></div>
+            </div>
+        </footer>
+
+    </div> 
+
+    <audio id="background-music" src="assets/backsound.mp3" loop></audio>
+
+    <script>
+        // --- LOGIKA NOTIFIKASI CHAT ACAK ---
+        const chatNotifications = [
+            {
+                name: 'Yinger UwU',
+                photo: 'assets/images/yinger.png',
+                message: 'Dont forget succinct rockstars!'
+            },
+            {
+                name: 'Addyyeah',
+                photo: 'assets/images/addy.jpg',
+                message: 'Mainnet soon yeahh'
+            },
+            {
+                name: 'Zaharon bruhh',
+                photo: 'assets/images/zaharon.jpg',
+                message: 'Log in bruhh, lets play together'
+            },
+            {
+                name: 'Duskieee',
+                photo: 'assets/images/duskie.jpg',
+                message: 'Thanks for joining!'
+            }
+        ];
+
+        function showRandomNotifications() {
+            const notificationList = document.getElementById('notification-list');
+            if (!notificationList) return; // Tambahan pengaman
+            notificationList.innerHTML = ''; 
+            const shuffled = chatNotifications.sort(() => 0.5 - Math.random());
+            let selected = shuffled.slice(0, 1);
+            selected.forEach(notif => {
+                const item = `
+                    <li class="notification-item">
+                        <img src="${notif.photo}" alt="${notif.name}">
+                        <div class="notification-content">
+                            <p>${notif.name}</p>
+                            <span>${notif.message}</span>
+                        </div>
+                    </li>
+                `;
+                notificationList.innerHTML += item;
+            });
+        }
+
+        // --- LOGIKA TOMBOL MASUK & MUSIK ---
+        const enterBtn = document.getElementById('enter-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainApp = document.getElementById('main-app');
+        const music = document.getElementById('background-music');
+
+        if (enterBtn) { // Tambahan pengaman
+            enterBtn.addEventListener('click', () => {
+                music.volume = 0.3;
+                music.play();
+                welcomeScreen.style.display = 'none';
+                mainApp.classList.remove('hidden');
+            });
+        }
+
+        // --- LOGIKA JAM & TANGGAL ---
+        function updateDateTime() {
+            const now = new Date();
+            const clockElement = document.getElementById('clock');
+            const dateElement = document.getElementById('date-widget');
+            if (!clockElement || !dateElement) return; // Tambahan pengaman
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            clockElement.textContent = `${hours}:${minutes}`;
+            const options = { weekday: 'short', day: 'numeric', month: 'short' };
+            dateElement.textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        // Panggil semua fungsi saat halaman dimuat
+        showRandomNotifications();
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+    </script>
+
+</body>
+</html>
