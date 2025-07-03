@@ -16,6 +16,7 @@
             <button id="enter-btn">Click to Enter</button>
         </div>
     </div>
+
     <div id="main-app" class="hidden">
         <header class="top-menubar">
             <div class="menu-left"><span class="app-name">Succinct Verse</span></div>
@@ -49,8 +50,9 @@
             </div>
         </footer>
     </div>
+    
     <audio id="background-music" src="assets/backsound.mp3" loop></audio>
-
+    
     <div id="sp1-verifier-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
@@ -66,128 +68,149 @@
         <div class="modal-content wide">
             <button id="close-community-modal" class="modal-close-btn">&times;</button>
             <h2>Community Board</h2>
-            
-            <div id="community-login-view">
-                <p>Please log in with Twitter to leave your mark.</p>
-                <button id="login-twitter-btn" class="submit-art-btn">
-                    <i class="fi fi-brands-twitter-x"></i> Log In with Twitter
-                </button>
-            </div>
-
-            <div id="community-drawing-view" class="hidden">
-                 <p>Signed in as <strong id="twitter-username-display">@username</strong>. Draw anything!</p>
-                <div class="drawing-area">
-                    <div class="tools">
-                        <label for="colorPicker">Color:</label>
-                        <input type="color" id="colorPicker" value="#FE11C5">
-                        <label for="brushSize">Size:</label>
-                        <input type="range" id="brushSize" min="1" max="50" value="5">
-                        <button id="eraserBtn">Eraser</button>
-                        <button id="clearBtn">Clear</button>
-                    </div>
-                    <canvas id="drawing-canvas"></canvas>
+            <p>Leave your mark on this shared canvas!</p>
+            <div class="drawing-area">
+                <div class="tools">
+                    <label for="colorPicker">Color:</label>
+                    <input type="color" id="colorPicker" value="#FE11C5">
+                    <label for="brushSize">Size:</label>
+                    <input type="range" id="brushSize" min="1" max="50" value="5">
+                    <button id="eraserBtn">Eraser</button>
+                    <button id="clearBtn">Clear</button>
                 </div>
-                <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
+                <canvas id="drawing-canvas"></canvas>
             </div>
+            <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
         </div>
     </div>
 
-    <script>
-       <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- KODE LAMA ANDA UNTUK UI DASAR (BIARKAN) ---
-        // (kode notifikasi, musik, jam, dll. ada di sini)
-        const chatNotifications=[{name:'Yinger UwU',photo:'assets/images/yinger.png',message:'Dont forget succinct rockstars!'},{name:'Addyyeah',photo:'assets/images/addy.jpg',message:'Mainnet soon yeahh'},{name:'Zaharon bruhh',photo:'assets/images/zaharon.jpg',message:'Log in bruhh, lets play together'},{name:'Duskieee',photo:'assets/images/duskie.jpg',message:'Thanks for joining!'}];function showRandomNotifications(){const t=document.getElementById('notification-list');if(!t)return;t.innerHTML='';const e=chatNotifications.sort(()=>.5-Math.random());let o=e.slice(0,1);o.forEach(e=>{const o=`<li class="notification-item"><img src="${e.photo}" alt="${e.name}"><div class="notification-content"><p>${e.name}</p><span>${e.message}</span></div></li>`;t.innerHTML+=o})}const enterBtn=document.getElementById('enter-btn'),welcomeScreen=document.getElementById('welcome-screen'),mainApp=document.getElementById('main-app'),music=document.getElementById('background-music');enterBtn&&enterBtn.addEventListener('click',()=>{music&&(music.volume=.3,music.play()),welcomeScreen.style.display='none',mainApp.classList.remove('hidden')});function updateDateTime(){const t=new Date,e=document.getElementById('clock'),o=document.getElementById('date-widget');if(!e||!o)return;const n=String(t.getHours()).padStart(2,'0'),a=String(t.getMinutes()).padStart(2,'0');e.textContent=`${n}:${a}`;const i={weekday:'short',day:'numeric',month:'short'};o.textContent=t.toLocaleDateString('en-US',i)}showRandomNotifications(),setInterval(updateDateTime,1e3),updateDateTime();
+    <script type="module">
+        // ===== 1. KONEKSI KE FIREBASE (GANTI DENGAN KUNCI ANDA) =====
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
-        // --- PENGONTROL POPUP UMUM ---
-        function setupModal(buttonId, modalId, closeButtonId, onOpen = null) {
-            const openBtn = document.getElementById(buttonId);
-            const modal = document.getElementById(modalId);
-            const closeBtn = document.getElementById(closeButtonId);
-            if (!openBtn || !modal || !closeBtn) return;
-            const open = () => { modal.classList.remove('hidden'); modal.classList.add('visible'); if (onOpen) onOpen(); };
-            const close = () => { modal.classList.remove('visible'); setTimeout(() => modal.classList.add('hidden'), 300); };
-            openBtn.addEventListener('click', open);
-            closeBtn.addEventListener('click', close);
-            modal.querySelector('.modal-overlay').addEventListener('click', close);
-        }
+        // GANTI DENGAN KONFIGURASI FIREBASE ANDA SENDIRI DARI DASHBOARD
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFKSgYfeR_Gql7qZdP5_EYVw-BO5VkNCE",
+  authDomain: "succinct-comboard.firebaseapp.com",
+  projectId: "succinct-comboard",
+  storageBucket: "succinct-comboard.firebasestorage.app",
+  messagingSenderId: "853910523370",
+  appId: "1:853910523370:web:f0b2e11ba95067bc35f693"
+        };
 
-        // --- PENGATURAN POPUP SP1 VERIFIER ---
-        const consoleOutput = document.getElementById('sp1-console');
-        const verificationSteps = ["Initializing ZKVM...", "Compiling program...", "Generating proof...", "✅ Execution Verified."];
-        function runConsoleAnimation() { if (!consoleOutput) return; consoleOutput.innerHTML = ''; let i = 0; const interval = setInterval(() => { if (i < verificationSteps.length) { const line = document.createElement('span'); line.className = 'console-line'; line.textContent = `> ${verificationSteps[i]}`; consoleOutput.appendChild(line); consoleOutput.scrollTop = consoleOutput.scrollHeight; i++; } else { clearInterval(interval); } }, 800); }
-        setupModal('open-sp1-verifier', 'sp1-verifier-modal', 'close-sp1-modal', runConsoleAnimation);
+        // Inisialisasi Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const artCollection = collection(db, "arts");
 
-        // --- PENGATURAN POPUP COMMUNITY BOARD ---
-        // Elemen-elemen
-        const communityLoginView = document.getElementById('community-login-view');
-        const communityDrawingView = document.getElementById('community-drawing-view');
-        const loginTwitterBtn = document.getElementById('login-twitter-btn');
-        const twitterUsernameDisplay = document.getElementById('twitter-username-display');
-        const canvas = document.getElementById('drawing-canvas');
-        const colorPicker = document.getElementById('colorPicker');
-        const brushSize = document.getElementById('brushSize');
-        const eraserBtn = document.getElementById('eraserBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const submitArtBtn = document.getElementById('submitArtBtn');
+        // ===== 2. KODE UI DASAR (TOMBOL ENTER, JAM, NOTIFIKASI) =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const enterBtn = document.getElementById('enter-btn');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const mainApp = document.getElementById('main-app');
+            const music = document.getElementById('background-music');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', () => {
+                    if (music) { music.volume = 0.3; music.play().catch(e => console.error("Audio play failed:", e)); }
+                    if (welcomeScreen) welcomeScreen.style.display = 'none';
+                    if (mainApp) mainApp.classList.remove('hidden');
+                });
+            }
 
-        let currentUser = null; // Simpan data user { username: 'vankioo' }
+            // ... (kode notifikasi dan jam tetap sama)
+            const chatNotifications=[{name:'Yinger UwU',photo:'assets/images/yinger.png',message:'Dont forget succinct rockstars!'},{name:'Addyyeah',photo:'assets/images/addy.jpg',message:'Mainnet soon yeahh'},{name:'Zaharon bruhh',photo:'assets/images/zaharon.jpg',message:'Log in bruhh, lets play together'},{name:'Duskieee',photo:'assets/images/duskie.jpg',message:'Thanks for joining!'}];function showRandomNotifications(){const t=document.getElementById('notification-list');if(!t)return;t.innerHTML='';const e=chatNotifications.sort(()=>.5-Math.random());let o=e[0];o&&(t.innerHTML=`<li class="notification-item"><img src="${o.photo}" alt="${o.name}"><div class="notification-content"><p>${o.name}</p><span>${o.message}</span></div></li>`)}function updateDateTime(){const t=new Date,e=document.getElementById('clock'),o=document.getElementById('date-widget');e&&(e.textContent=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:!1})),o&&(o.textContent=t.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
 
-        // Fungsi untuk meng-handle login Twitter
-        loginTwitterBtn.addEventListener('click', () => {
-            // DI DUNIA NYATA: Kode ini akan membuka jendela baru ke backend
-            // window.location.href = '/api/auth/twitter'; 
+            // ===== 3. PENGATURAN SEMUA POPUP/MODAL =====
             
-            // SIMULASI: Anggap login berhasil dan kita dapat username
-            alert("Simulasi Login Twitter Berhasil!");
-            currentUser = { username: 'vankioo' }; // Ganti dengan username asli nanti
-            showDrawingView(currentUser.username);
-        });
+            // --- Fungsi Umum untuk Buka/Tutup Modal ---
+            function setupModal(buttonId, modalId, closeButtonId, onOpen) {
+                const openBtn = document.getElementById(buttonId);
+                const modal = document.getElementById(modalId);
+                const closeBtn = document.getElementById(closeButtonId);
+                if (!openBtn || !modal || !closeBtn) return;
+                const open = () => { modal.classList.remove('hidden'); modal.classList.add('visible'); if (onOpen) onOpen(); };
+                const close = () => { modal.classList.remove('visible'); setTimeout(() => modal.classList.add('hidden'), 300); };
+                openBtn.addEventListener('click', open);
+                closeBtn.addEventListener('click', close);
+                modal.querySelector('.modal-overlay').addEventListener('click', close);
+            }
 
-        function showDrawingView(username) {
-            communityLoginView.classList.add('hidden');
-            communityDrawingView.classList.remove('hidden');
-            twitterUsernameDisplay.textContent = `@${username}`;
-        }
-        
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            let isDrawing = false, isEraser = false;
-            function setupCanvas() { canvas.width = canvas.parentElement.clientWidth; canvas.height = 400; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; }
-            function startDrawing(e) { isDrawing = true; draw(e); }
-            function stopDrawing() { isDrawing = false; ctx.beginPath(); }
-            function draw(e) { if (!isDrawing) return; e.preventDefault(); const r = canvas.getBoundingClientRect(); const x = (e.clientX || e.touches[0].clientX) - r.left; const y = (e.clientY || e.touches[0].clientY) - r.top; ctx.lineWidth = brushSize.value; ctx.strokeStyle = isEraser ? 'white' : colorPicker.value; ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y); }
-            canvas.addEventListener('pointerdown', startDrawing);
-            canvas.addEventListener('pointerup', stopDrawing);
-            canvas.addEventListener('pointerout', stopDrawing);
-            canvas.addEventListener('pointermove', draw);
-            clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-            eraserBtn.addEventListener('click', () => { isEraser = !isEraser; eraserBtn.classList.toggle('active', isEraser); });
+            // --- Pengaturan SP1 Verifier Modal ---
+            const consoleOutput = document.getElementById('sp1-console');
+            const verificationSteps = ["Initializing ZKVM...", "Compiling program...", "Generating proof...", "✅ Execution Verified."];
+            function runConsoleAnimation() { if (!consoleOutput) return; consoleOutput.innerHTML = ''; let i = 0; const interval = setInterval(() => { if (i < verificationSteps.length) { const line = document.createElement('span'); line.className = 'console-line'; line.textContent = `> ${verificationSteps[i]}`; consoleOutput.appendChild(line); consoleOutput.scrollTop = consoleOutput.scrollHeight; i++; } else { clearInterval(interval); } }, 800); }
+            setupModal('open-sp1-verifier', 'sp1-verifier-modal', 'close-sp1-modal', runConsoleAnimation);
 
-            submitArtBtn.addEventListener('click', () => {
-                const imageData = canvas.toDataURL('image/png');
+            // --- Pengaturan Community Board Modal (dengan Firebase) ---
+            const canvas = document.getElementById('drawing-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                const colorPicker = document.getElementById('colorPicker');
+                const brushSize = document.getElementById('brushSize');
+                const eraserBtn = document.getElementById('eraserBtn');
+                const clearBtn = document.getElementById('clearBtn');
+                const submitArtBtn = document.getElementById('submitArtBtn');
+                let isDrawing = false, isEraser = false;
+
+                function setupCanvas() {
+                    const area = canvas.parentElement;
+                    canvas.width = area.clientWidth;
+                    canvas.height = 400;
+                    ctx.lineJoin = 'round';
+                    ctx.lineCap = 'round';
+                    loadAllArt(); // Langsung muat semua karya saat popup dibuka
+                }
+
+                async function loadAllArt() {
+                    const querySnapshot = await getDocs(query(artCollection, orderBy("createdAt")));
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Bersihkan kanvas dulu
+                    querySnapshot.forEach((doc) => {
+                        const art = doc.data();
+                        const img = new Image();
+                        img.src = art.imageData;
+                        img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
+                    });
+                }
                 
-                // DI DUNIA NYATA: Kirim data ke backend
-                // fetch('/api/save-art', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ username: currentUser.username, imageData: imageData })
-                // }).then(res => res.json()).then(data => {
-                //      if(data.success) alert('Your art has been saved!');
-                // });
+                submitArtBtn.addEventListener('click', async () => {
+                    try {
+                        const user = auth.currentUser || (await signInAnonymously(auth)).user;
+                        const imageData = canvas.toDataURL('image/png');
+                        submitArtBtn.disabled = true;
+                        submitArtBtn.textContent = "Saving...";
 
-                // SIMULASI:
-                console.log(`Art by ${currentUser.username} siap dikirim:`, imageData);
-                alert("Art has been locked! (Data gambar disimpan di log konsol)");
-                submitArtBtn.disabled = true;
-                submitArtBtn.textContent = "Thank You!";
-                canvas.style.pointerEvents = 'none';
-            });
-            
-            setupModal('open-community-board', 'community-board-modal', 'close-community-modal', setupCanvas);
-        }
-    });
-</script>
+                        await addDoc(artCollection, {
+                            userId: user.uid,
+                            imageData: imageData,
+                            createdAt: new Date()
+                        });
+                        alert("Your art has been saved!");
+                        submitArtBtn.textContent = "Thank You!";
+                        canvas.style.pointerEvents = 'none';
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Sorry, could not save your art.");
+                        submitArtBtn.disabled = false;
+                        submitArtBtn.textContent = "Lock In Your Art";
+                    }
+                });
+
+                function startDrawing(e) { isDrawing = true; draw(e); }
+                function stopDrawing() { isDrawing = false; ctx.beginPath(); }
+                function draw(e) { if (!isDrawing) return; e.preventDefault(); const rect = canvas.getBoundingClientRect(); const x = (e.clientX || e.touches[0].clientX) - rect.left; const y = (e.clientY || e.touches[0].clientY) - rect.top; ctx.lineWidth = brushSize.value; ctx.strokeStyle = isEraser ? 'white' : colorPicker.value; ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y); }
+                canvas.addEventListener('pointerdown', startDrawing);
+                canvas.addEventListener('pointerup', stopDrawing);
+                canvas.addEventListener('pointerout', stopDrawing);
+                canvas.addEventListener('pointermove', draw);
+                clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+                eraserBtn.addEventListener('click', () => { isEraser = !isEraser; eraserBtn.classList.toggle('active', isEraser); });
+                
+                setupModal('open-community-board', 'community-board-modal', 'close-community-modal', setupCanvas);
+            }
+        });
     </script>
 </body>
 </html>
