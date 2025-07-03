@@ -401,3 +401,25 @@ body {
     border-radius: 8px;
     cursor: pointer;
 }
+/* ===== 9. FIX COMMUNITY BOARD BUTTONS ===== */
+.drawing-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 15px;
+}
+
+#back-to-gallery-btn {
+    background: none;
+    border: 1px solid #888;
+    color: #888;
+    padding: 15px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#submitArtBtn {
+    flex-grow: 1; /* Membuat tombol ini mengisi sisa ruang */
+}
