@@ -1,5 +1,5 @@
 /* ===== GLOBAL & FONT ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono&display=swap');
 
 :root {
     --background-image: url('assets/images/background.jpg'); /* Ganti dengan gambar background Anda */
@@ -23,7 +23,7 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ===== 1. TOP MENU BAR (FINAL) ===== */
+/* ===== 1. TOP MENU BAR ===== */
 .top-menubar {
     position: fixed;
     top: 0;
@@ -41,72 +41,17 @@ body {
     font-weight: 500;
     box-sizing: border-box;
 }
-
-.menu-left, .menu-right {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-.menu-left {
-    gap: 20px;
-}
-.menu-right {
-    gap: 8px; /* Jarak antar ikon/widget lebih rapat dan rapi */
-}
-
-/* Membuat semua elemen di menu rata tengah sempurna & bisa di-hover */
-.menu-left > *, .menu-right > * {
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    height: 100%;
-    border-radius: 4px;
-    transition: background-color 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-/* Efek hover hanya untuk elemen yang bisa diklik */
-.menu-left > span:not(.app-name):hover,
-.menu-right > div:hover,
-.menu-right > svg:hover {
-    background-color: var(--hover-bg);
-}
-
-/* Teks tidak perlu efek hover */
-#date-widget, #clock {
-    cursor: default;
-}
-#date-widget:hover, #clock:hover {
-    background-color: transparent;
-}
-
-/* Mengatur warna dan ukuran ikon SVG */
-#notification-widget svg, .cpu-widget svg {
-    width: 16px;
-    height: 16px;
-    aspect-ratio: 1 / 1;     /* jaga bentuk */
-    flex-shrink: 0;          /* hindari gepeng */
-    color: white;            /* ubah jadi putih */
-    display: block;
-}
-
-
-/* Tampilan untuk CPU Meter */
+.menu-left, .menu-right { display: flex; align-items: center; height: 100%;}
+.menu-left { gap: 20px; }
+.menu-right { gap: 8px; }
+.menu-left > *, .menu-right > * { display: flex; align-items: center; padding: 0 8px; height: 100%; border-radius: 4px; transition: background-color 0.2s ease-in-out; cursor: pointer;}
+.menu-left > span:not(.app-name):hover, .menu-right > div:hover, .menu-right > svg:hover { background-color: var(--hover-bg); }
+#date-widget, #clock { cursor: default; }
+#date-widget:hover, #clock:hover { background-color: transparent; }
+#notification-widget svg, .cpu-widget svg { width: 16px; height: 16px; aspect-ratio: 1 / 1; flex-shrink: 0; color: white; display: block;}
 .cpu-widget { gap: 8px; }
-.cpu-bar-container {
-    width: 50px;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-}
-.cpu-bar {
-    width: 40%; height: 100%;
-    background-color: var(--accent-pink);
-    border-radius: 3px;
-    animation: cpu-load 3s infinite ease-in-out;
-}
+.cpu-bar-container { width: 50px; height: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 3px; overflow: hidden;}
+.cpu-bar { width: 40%; height: 100%; background-color: var(--accent-pink); border-radius: 3px; animation: cpu-load 3s infinite ease-in-out;}
 @keyframes cpu-load {
     0% { width: 30%; } 25% { width: 80%; }
     50% { width: 45%; } 75% { width: 90%; }
@@ -135,27 +80,13 @@ body {
     transition: all 0.2s ease-in-out;
     cursor: pointer;
 }
-.desktop-icon:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05);
-}
+.desktop-icon:hover { background-color: rgba(255, 255, 255, 0.15); transform: scale(1.05); }
 .desktop-icon img { width: 70px; height: 70px; }
-.desktop-icon span {
-    font-size: 13px;
-    font-weight: 500;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
-.desktop-icon.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-.desktop-icon.disabled:hover {
-    background-color: transparent;
-    transform: none;
-}
+.desktop-icon span { font-size: 13px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.desktop-icon.disabled { opacity: 0.6; cursor: not-allowed; }
+.desktop-icon.disabled:hover { background-color: transparent; transform: none; }
 
-/* ===== 3. DOCK (FIXED) ===== */
-/* BAGIAN INI SUDAH DIPERBAIKI */
+/* ===== 3. DOCK ===== */
 .dock {
     position: fixed;
     bottom: 10px;
@@ -206,91 +137,27 @@ body {
     align-self: center;
 }
 
-/* ===== GAYA UNTUK LAYAR SAMBUTAN ===== */
-#welcome-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: #000;
-    z-index: 9999;
-    background-image: var(--background-image);
-    background-size: cover;
-    background-position: center;
-}
-.welcome-box {
-    text-align: center;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 40px 60px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.welcome-box h1 {
-    font-size: 4em;
-    font-weight: 700;
-    margin: 0;
-    color: var(--accent-pink);
-    font-family: 'Roboto Mono', monospace;
-}
-.welcome-box p {
-    font-size: 1.2em;
-    color: var(--text-secondary);
-    margin: 10px 0 30px 0;
-}
-#enter-btn {
-    padding: 12px 30px;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: white;
-    background-color: var(--accent-pink);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+/* ===== 4. WELCOME SCREEN & NOTIFICATIONS (TETAP SAMA) ===== */
+#welcome-screen { display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 9999; background-image: var(--background-image); background-size: cover; background-position: center;}
+.welcome-box { text-align: center; color: white; background-color: rgba(0, 0, 0, 0.4); padding: 40px 60px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);}
+.welcome-box h1 { font-size: 4em; font-weight: 700; margin: 0; color: var(--accent-pink); font-family: 'Roboto Mono', monospace;}
+.welcome-box p { font-size: 1.2em; color: var(--text-secondary); margin: 10px 0 30px 0;}
+#enter-btn { padding: 12px 30px; font-size: 1.1em; font-weight: bold; color: white; background-color: var(--accent-pink); border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;}
 #enter-btn:hover { filter: brightness(1.2); }
-.hidden { display: none; }
-
-/* ===== GAYA UNTUK WIDGET NOTIFIKASI ===== */
+.hidden { display: none !important; }
 #notification-widget { position: relative; }
-.notification-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 10px;
-    width: 320px;
-    background-color: #2c2c2e;
-    border-radius: 12px;
-    border: 1px solid #444;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    z-index: 100;
-}
+.notification-dropdown { display: none; position: absolute; top: 100%; right: 0; margin-top: 10px; width: 320px; background-color: #2c2c2e; border-radius: 12px; border: 1px solid #444; box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 100;}
 #notification-widget:hover .notification-dropdown { display: block; }
-.dropdown-header {
-    padding: 12px 15px;
-    font-weight: 700;
-    border-bottom: 1px solid #444;
-}
+.dropdown-header { padding: 12px 15px; font-weight: 700; border-bottom: 1px solid #444;}
 #notification-list { list-style: none; padding: 0; margin: 0; max-height: 400px; overflow-y: auto; }
 .notification-item { display: flex; gap: 12px; padding: 12px 15px; border-bottom: 1px solid #444; }
 .notification-item:last-child { border-bottom: none; }
 .notification-item img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
 .notification-content p { margin: 0; font-weight: 700; font-size: 14px; }
 .notification-content span { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
-.notification-badge {
-    position: absolute;
-    top: 0px; right: 2px;
-    width: 8px; height: 8px;
-    background-color: #FF3B30;
-    border-radius: 50%;
-    border: 2px solid var(--menubar-bg);
-}
-/* ===== 4. MODAL & POPUP STYLING ===== */
+.notification-badge { position: absolute; top: 0px; right: 2px; width: 8px; height: 8px; background-color: #FF3B30; border-radius: 50%; border: 2px solid var(--menubar-bg); }
+
+/* ===== 5. MODAL & POPUP STYLING ===== */
 .modal-container {
     position: fixed;
     top: 0;
@@ -305,12 +172,10 @@ body {
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
-
 .modal-container.visible {
     opacity: 1;
     pointer-events: auto;
 }
-
 .modal-overlay {
     position: absolute;
     top: 0;
@@ -320,7 +185,6 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
 }
-
 .modal-content {
     position: relative;
     background-color: #1c1c1e;
@@ -333,11 +197,9 @@ body {
     transform: scale(0.95);
     transition: transform 0.3s ease;
 }
-
 .modal-container.visible .modal-content {
     transform: scale(1);
 }
-
 .modal-close-btn {
     position: absolute;
     top: 15px;
@@ -354,13 +216,10 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 .modal-content h2 {
     margin-top: 0;
     color: var(--accent-pink);
 }
-
-/* Styling untuk konsol di dalam popup */
 .console {
     background-color: #000;
     border: 1px solid #333;
@@ -371,11 +230,23 @@ body {
     overflow-y: auto;
     font-family: 'Roboto Mono', monospace;
     font-size: 14px;
-    color: #00FF41; /* Warna teks hijau terminal */
+    color: #00FF41;
 }
-
 .console-line {
     white-space: pre-wrap;
     display: block;
     line-height: 1.5;
+}
+#drawing-canvas-placeholder {
+    width: 100%;
+    height: 300px;
+    background-color: #f0f0f0;
+    border: 1px dashed #999;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #555;
+    font-style: italic;
 }
