@@ -85,10 +85,10 @@
 
         <div class="separator"></div>
 
-        <a href="https://twitter.com/vankioo" target="_blank" class="dock-item" title="Twitter/X">
+        <a href="https://twitter.com/Duskiesoul" target="_blank" class="dock-item" title="Twitter/X">
             <i class="fi fi-brands-twitter-x"></i> <span>Twitter/X</span>
         </a>
-        <a href="https://discord.gg/succinct" target="_blank" class="dock-item" title="Discord">
+        <a href="https://discord.gg/succinctlabs" target="_blank" class="dock-item" title="Discord">
             <i class="fi fi-brands-discord"></i> <span>Discord</span>
         </a>
     </div>
@@ -177,6 +177,34 @@
         setInterval(updateDateTime, 1000);
         updateDateTime();
     </script>
+<script>
+        // Tunggu sampai semua elemen HTML siap
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Cari tombol SP1 Verifier berdasarkan ID-nya
+            const sp1Button = document.getElementById('open-sp1-verifier');
 
+            // Cek apakah tombolnya ada
+            if (sp1Button) {
+                // Tambahkan "pendengar" saat tombol diklik
+                sp1Button.addEventListener('click', function() {
+                    // Untuk sekarang, kita munculkan alert sederhana
+                    // Ini membuktikan bahwa tombolnya sudah berfungsi!
+                    alert('Tombol SP1 Verifier BERHASIL diklik! Popup akan muncul di sini.');
+
+                    // Di sini nanti Anda akan menulis kode untuk memunculkan
+                    // popup atau jendela konsol verifikasi Anda.
+                });
+            }
+
+            // Anda bisa tambahkan fungsi untuk tombol lain di sini
+            // contoh:
+            // const communityButton = document.getElementById('open-community-board');
+            // if (communityButton) { ... }
+
+        });
+    </script>
+</body>
+</html>
 </body>
 </html>
