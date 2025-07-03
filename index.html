@@ -63,167 +63,187 @@
         </div>
     </div>
     
-   <div id="community-board-modal" class="modal-container hidden">
-    <div class="modal-overlay"></div>
-    <div class="modal-content wide">
-        <button id="close-community-modal" class="modal-close-btn">&times;</button>
-        <h2>Community Memorial Wall</h2>
-        
-        <div id="gallery-view">
-            <div class="gallery-header">
-                <p>All art contributed by the Succinct Verse community.</p>
-                <button id="go-to-drawing-btn" class="submit-art-btn small">Add Your Art</button>
-            </div>
-            <div id="art-gallery-container">
-                <p class="loading-text">Loading memorial wall...</p>
-            </div>
-        </div>
-
-        <div id="drawing-view" class="hidden">
-            <p>Signed in as <strong id="username-display">@username</strong>. Draw anything!</p>
-            <div class="drawing-area">
-                <div class="tools">
-                    <label for="colorPicker">Color:</label><input type="color" id="colorPicker" value="#FE11C5">
-                    <label for="brushSize">Size:</label><input type="range" id="brushSize" min="1" max="50" value="5">
-                    <button id="eraserBtn">Eraser</button><button id="clearBtn">Clear</button>
+    <div id="community-board-modal" class="modal-container hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content wide">
+            <button id="close-community-modal" class="modal-close-btn">&times;</button>
+            <h2>Community Memorial Wall</h2>
+            
+            <div id="gallery-view">
+                <div class="gallery-header">
+                    <p>All art contributed by the Succinct Verse community.</p>
+                    <button id="go-to-drawing-btn" class="submit-art-btn small">Add Your Art</button>
                 </div>
-                <canvas id="drawing-canvas"></canvas>
+                <div id="art-gallery-container">
+                    <p class="loading-text">Loading memorial wall...</p>
+                </div>
             </div>
-            <div class="drawing-actions">
-                <button id="back-to-gallery-btn">Back to Gallery</button>
-                <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
+
+            <div id="drawing-view" class="hidden">
+                <p>Leave your mark on the canvas!</p>
+                <div class="drawing-area">
+                    <div class="tools">
+                        <label for="colorPicker">Color:</label><input type="color" id="colorPicker" value="#FE11C5">
+                        <label for="brushSize">Size:</label><input type="range" id="brushSize" min="1" max="50" value="5">
+                        <button id="eraserBtn">Eraser</button><button id="clearBtn">Clear</button>
+                    </div>
+                    <canvas id="drawing-canvas"></canvas>
+                </div>
+                <div class="drawing-actions">
+                    <button id="back-to-gallery-btn">Back to Gallery</button>
+                    <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <script type="module">
-        // ===== 1. KONEKSI KE FIREBASE (GANTI DENGAN KUNCI ANDA) =====
+        // ===== 1. FIREBASE CONNECTION (REPLACE WITH YOUR KEYS) =====
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
-        // GANTI DENGAN KONFIGURASI FIREBASE ANDA SENDIRI DARI DASHBOARD
         const firebaseConfig = {
             apiKey: "AIzaSyCFKSgYfeR_Gql7qZdP5_EYVw-BO5VkNCE",
-  authDomain: "succinct-comboard.firebaseapp.com",
-  projectId: "succinct-comboard",
-  storageBucket: "succinct-comboard.firebasestorage.app",
-  messagingSenderId: "853910523370",
-  appId: "1:853910523370:web:f0b2e11ba95067bc35f693"
+            authDomain: "succinct-comboard.firebaseapp.com",
+            projectId: "succinct-comboard",
+            storageBucket: "succinct-comboard.appspot.com",
+            messagingSenderId: "853910523370",
+            appId: "1:853910523370:web:f0b2e11ba95067bc35f693"
         };
 
-        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
         const artCollection = collection(db, "arts");
 
-        // ===== 2. KODE UI DASAR (TOMBOL ENTER, JAM, NOTIFIKASI) =====
-        document.addEventListener('DOMContentLoaded', function() {
-            const enterBtn = document.getElementById('enter-btn');
-            const welcomeScreen = document.getElementById('welcome-screen');
-            const mainApp = document.getElementById('main-app');
-            const music = document.getElementById('background-music');
-            if (enterBtn) {
-                enterBtn.addEventListener('click', () => {
-                    if (music) { music.volume = 0.3; music.play().catch(e => console.error("Audio play failed:", e)); }
-                    if (welcomeScreen) welcomeScreen.style.display = 'none';
-                    if (mainApp) mainApp.classList.remove('hidden');
-                });
-            }
+        // ===== 2. CORE UI LOGIC (ENTER BUTTON, CLOCK, NOTIFICATIONS) =====
+        const enterBtn = document.getElementById('enter-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainApp = document.getElementById('main-app');
+        const music = document.getElementById('background-music');
+        if (enterBtn) {
+            enterBtn.addEventListener('click', () => {
+                if (music) { music.volume = 0.3; music.play().catch(e => console.error("Audio play failed:", e)); }
+                if (welcomeScreen) welcomeScreen.style.display = 'none';
+                if (mainApp) mainApp.classList.remove('hidden');
+            });
+        }
+        
+        const chatNotifications=[{name:'Yinger UwU',photo:'assets/images/yinger.png',message:'Dont forget succinct rockstars!'},{name:'Addyyeah',photo:'assets/images/addy.jpg',message:'Mainnet soon yeahh'},{name:'Zaharon bruhh',photo:'assets/images/zaharon.jpg',message:'Log in bruhh, lets play together'},{name:'Duskieee',photo:'assets/images/duskie.jpg',message:'Thanks for joining!'}];function showRandomNotifications(){const t=document.getElementById('notification-list');if(!t)return;t.innerHTML='';const e=chatNotifications.sort(()=>.5-Math.random())[0];e&&(t.innerHTML=`<li class="notification-item"><img src="${e.photo}" alt="${e.name}"><div class="notification-content"><p>${e.name}</p><span>${e.message}</span></div></li>`)}function updateDateTime(){const t=new Date,e=document.getElementById('clock'),o=document.getElementById('date-widget');e&&(e.textContent=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:!1})),o&&(o.textContent=t.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
 
-            // ... (kode notifikasi dan jam tetap sama)
-            const chatNotifications=[{name:'Yinger UwU',photo:'assets/images/yinger.png',message:'Dont forget succinct rockstars!'},{name:'Addyyeah',photo:'assets/images/addy.jpg',message:'Mainnet soon yeahh'},{name:'Zaharon bruhh',photo:'assets/images/zaharon.jpg',message:'Log in bruhh, lets play together'},{name:'Duskieee',photo:'assets/images/duskie.jpg',message:'Thanks for joining!'}];function showRandomNotifications(){const t=document.getElementById('notification-list');if(!t)return;t.innerHTML='';const e=chatNotifications.sort(()=>.5-Math.random());let o=e[0];o&&(t.innerHTML=`<li class="notification-item"><img src="${o.photo}" alt="${o.name}"><div class="notification-content"><p>${o.name}</p><span>${o.message}</span></div></li>`)}function updateDateTime(){const t=new Date,e=document.getElementById('clock'),o=document.getElementById('date-widget');e&&(e.textContent=t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:!1})),o&&(o.textContent=t.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
+        // ===== 3. MODAL (POPUP) CONTROLLER =====
+        function setupModal(buttonId, modalId, closeButtonId, onOpen) {
+            const openBtn = document.getElementById(buttonId);
+            const modal = document.getElementById(modalId);
+            const closeBtn = document.getElementById(closeButtonId);
+            if (!openBtn || !modal || !closeBtn) return;
+            const open = () => { modal.classList.remove('hidden'); modal.classList.add('visible'); if (onOpen) onOpen(); };
+            const close = () => { modal.classList.remove('visible'); setTimeout(() => modal.classList.add('hidden'), 300); };
+            openBtn.addEventListener('click', open);
+            closeBtn.addEventListener('click', close);
+            modal.querySelector('.modal-overlay').addEventListener('click', close);
+        }
 
-            // ===== 3. PENGATURAN SEMUA POPUP/MODAL =====
+        // --- SP1 Verifier Setup ---
+        const consoleOutput = document.getElementById('sp1-console');
+        const verificationSteps = ["Initializing ZKVM...", "Compiling program...", "Generating proof...", "✅ Execution Verified."];
+        function runConsoleAnimation() { if (!consoleOutput) return; consoleOutput.innerHTML = ''; let i = 0; const interval = setInterval(() => { if (i < verificationSteps.length) { const line = document.createElement('span'); line.className = 'console-line'; line.textContent = `> ${verificationSteps[i]}`; consoleOutput.appendChild(line); consoleOutput.scrollTop = consoleOutput.scrollHeight; i++; } else { clearInterval(interval); } }, 800); }
+        setupModal('open-sp1-verifier', 'sp1-verifier-modal', 'close-sp1-modal', runConsoleAnimation);
+
+        // --- Community Board Setup ---
+        const galleryView = document.getElementById('gallery-view');
+        const drawingView = document.getElementById('drawing-view');
+        const goToDrawingBtn = document.getElementById('go-to-drawing-btn');
+        const backToGalleryBtn = document.getElementById('back-to-gallery-btn');
+        const galleryContainer = document.getElementById('art-gallery-container');
+        const canvas = document.getElementById('drawing-canvas');
+
+        if (canvas && galleryView) {
+            goToDrawingBtn.addEventListener('click', () => {
+                galleryView.classList.add('hidden');
+                drawingView.classList.remove('hidden');
+                setupCanvas(); // Prepare canvas for drawing
+            });
+            backToGalleryBtn.addEventListener('click', () => {
+                drawingView.classList.add('hidden');
+                galleryView.classList.remove('hidden');
+            });
             
-            // --- Fungsi Umum untuk Buka/Tutup Modal ---
-            function setupModal(buttonId, modalId, closeButtonId, onOpen) {
-                const openBtn = document.getElementById(buttonId);
-                const modal = document.getElementById(modalId);
-                const closeBtn = document.getElementById(closeButtonId);
-                if (!openBtn || !modal || !closeBtn) return;
-                const open = () => { modal.classList.remove('hidden'); modal.classList.add('visible'); if (onOpen) onOpen(); };
-                const close = () => { modal.classList.remove('visible'); setTimeout(() => modal.classList.add('hidden'), 300); };
-                openBtn.addEventListener('click', open);
-                closeBtn.addEventListener('click', close);
-                modal.querySelector('.modal-overlay').addEventListener('click', close);
-            }
-
-            // --- Pengaturan SP1 Verifier Modal ---
-            const consoleOutput = document.getElementById('sp1-console');
-            const verificationSteps = ["Initializing ZKVM...", "Compiling program...", "Generating proof...", "✅ Execution Verified."];
-            function runConsoleAnimation() { if (!consoleOutput) return; consoleOutput.innerHTML = ''; let i = 0; const interval = setInterval(() => { if (i < verificationSteps.length) { const line = document.createElement('span'); line.className = 'console-line'; line.textContent = `> ${verificationSteps[i]}`; consoleOutput.appendChild(line); consoleOutput.scrollTop = consoleOutput.scrollHeight; i++; } else { clearInterval(interval); } }, 800); }
-            setupModal('open-sp1-verifier', 'sp1-verifier-modal', 'close-sp1-modal', runConsoleAnimation);
-
-            // --- Pengaturan Community Board Modal (dengan Firebase) ---
-            const canvas = document.getElementById('drawing-canvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                const colorPicker = document.getElementById('colorPicker');
-                const brushSize = document.getElementById('brushSize');
-                const eraserBtn = document.getElementById('eraserBtn');
-                const clearBtn = document.getElementById('clearBtn');
-                const submitArtBtn = document.getElementById('submitArtBtn');
-                let isDrawing = false, isEraser = false;
-
-                function setupCanvas() {
-                    const area = canvas.parentElement;
-                    canvas.width = area.clientWidth;
-                    canvas.height = 400;
-                    ctx.lineJoin = 'round';
-                    ctx.lineCap = 'round';
-                    loadAllArt(); // Langsung muat semua karya saat popup dibuka
-                }
-
-                async function loadAllArt() {
-                    const querySnapshot = await getDocs(query(artCollection, orderBy("createdAt")));
-                    ctx.clearRect(0, 0, canvas.width, canvas.height); // Bersihkan kanvas dulu
-                    querySnapshot.forEach((doc) => {
-                        const art = doc.data();
-                        const img = new Image();
-                        img.src = art.imageData;
-                        img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
-                    });
-                }
-                
-                submitArtBtn.addEventListener('click', async () => {
-                    try {
-                        const user = auth.currentUser || (await signInAnonymously(auth)).user;
-                        const imageData = canvas.toDataURL('image/png');
-                        submitArtBtn.disabled = true;
-                        submitArtBtn.textContent = "Saving...";
-
-                        await addDoc(artCollection, {
-                            userId: user.uid,
-                            imageData: imageData,
-                            createdAt: new Date()
+            async function loadAllArt() {
+                galleryContainer.innerHTML = '<p class="loading-text">Loading memorial wall...</p>';
+                try {
+                    const querySnapshot = await getDocs(query(artCollection, orderBy("createdAt", "desc")));
+                    galleryContainer.innerHTML = '';
+                    if (querySnapshot.empty) {
+                        galleryContainer.innerHTML = '<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            const art = doc.data();
+                            const imgContainer = document.createElement('div');
+                            imgContainer.className = 'art-piece';
+                            const img = new Image();
+                            img.src = art.imageData;
+                            imgContainer.appendChild(img);
+                            galleryContainer.appendChild(imgContainer);
                         });
-                        alert("Your art has been saved!");
-                        submitArtBtn.textContent = "Thank You!";
-                        canvas.style.pointerEvents = 'none';
-                    } catch (error) {
-                        console.error("Error:", error);
-                        alert("Sorry, could not save your art.");
-                        submitArtBtn.disabled = false;
-                        submitArtBtn.textContent = "Lock In Your Art";
                     }
-                });
-
-                function startDrawing(e) { isDrawing = true; draw(e); }
-                function stopDrawing() { isDrawing = false; ctx.beginPath(); }
-                function draw(e) { if (!isDrawing) return; e.preventDefault(); const rect = canvas.getBoundingClientRect(); const x = (e.clientX || e.touches[0].clientX) - rect.left; const y = (e.clientY || e.touches[0].clientY) - rect.top; ctx.lineWidth = brushSize.value; ctx.strokeStyle = isEraser ? 'white' : colorPicker.value; ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y); }
-                canvas.addEventListener('pointerdown', startDrawing);
-                canvas.addEventListener('pointerup', stopDrawing);
-                canvas.addEventListener('pointerout', stopDrawing);
-                canvas.addEventListener('pointermove', draw);
-                clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-                eraserBtn.addEventListener('click', () => { isEraser = !isEraser; eraserBtn.classList.toggle('active', isEraser); });
-                
-                setupModal('open-community-board', 'community-board-modal', 'close-community-modal', setupCanvas);
+                } catch(error) {
+                    console.error("Failed to load art:", error);
+                    galleryContainer.innerHTML = '<p class="loading-text">Could not load the memorial wall. Please try again later.</p>';
+                }
             }
-        });
+            
+            setupModal('open-community-board', 'community-board-modal', 'close-community-modal', loadAllArt);
+
+            // Canvas Drawing Logic
+            const ctx = canvas.getContext('2d');
+            const colorPicker = document.getElementById('colorPicker');
+            const brushSize = document.getElementById('brushSize');
+            const eraserBtn = document.getElementById('eraserBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const submitArtBtn = document.getElementById('submitArtBtn');
+            let isDrawing = false, isEraser = false;
+            
+            function setupCanvas() {
+                const area = canvas.parentElement;
+                canvas.width = area.clientWidth;
+                canvas.height = 400;
+                ctx.fillStyle = "white"; // Set a white background
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+            }
+
+            function startDrawing(e) { isDrawing = true; draw(e); }
+            function stopDrawing() { isDrawing = false; ctx.beginPath(); }
+            function draw(e) { if (!isDrawing) return; e.preventDefault(); const rect = canvas.getBoundingClientRect(); const x = (e.clientX || e.touches[0].clientX) - rect.left; const y = (e.clientY || e.touches[0].clientY) - rect.top; ctx.lineWidth = brushSize.value; ctx.strokeStyle = isEraser ? 'white' : colorPicker.value; ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y); }
+            canvas.addEventListener('pointerdown', startDrawing);
+            canvas.addEventListener('pointerup', stopDrawing);
+            canvas.addEventListener('pointerout', stopDrawing);
+            canvas.addEventListener('pointermove', draw);
+            clearBtn.addEventListener('click', () => { ctx.fillStyle = "white"; ctx.fillRect(0, 0, canvas.width, canvas.height); });
+            eraserBtn.addEventListener('click', () => { isEraser = !isEraser; eraserBtn.classList.toggle('active', isEraser); });
+
+            submitArtBtn.addEventListener('click', async () => {
+                try {
+                    const user = auth.currentUser || (await signInAnonymously(auth)).user;
+                    const imageData = canvas.toDataURL('image/png');
+                    submitArtBtn.disabled = true;
+                    submitArtBtn.textContent = "Saving...";
+                    await addDoc(artCollection, { userId: user.uid, imageData: imageData, createdAt: new Date() });
+                    alert("Your art has been saved to the memorial wall!");
+                    submitArtBtn.textContent = "Thank You!";
+                    // Go back to the gallery to see the new art
+                    backToGalleryBtn.click();
+                } catch (error) {
+                    console.error("Error saving art:", error);
+                    alert("Sorry, could not save your art.");
+                    submitArtBtn.disabled = false;
+                    submitArtBtn.textContent = "Lock In Your Art";
+                }
+            });
+        }
     </script>
 </body>
 </html>
