@@ -250,3 +250,90 @@ body {
     color: #555;
     font-style: italic;
 }
+/* ===== 6. COMMUNITY BOARD DRAWING MODAL ===== */
+.modal-content.wide {
+    max-width: 800px; /* Buat popup lebih lebar untuk area gambar */
+}
+
+.drawing-area {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tools {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+.tools label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tools input[type="color"] {
+    width: 40px;
+    height: 40px;
+    border: none;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: transparent;
+}
+/* HACK untuk styling color picker di Chrome/Edge */
+.tools input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.tools input[type="color"]::-webkit-color-swatch { border-radius: 50%; border: 2px solid white; }
+
+
+.tools button {
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-pink);
+    background-color: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tools button:hover, .tools button.active {
+    background-color: var(--accent-pink);
+    color: white;
+}
+
+#drawing-canvas {
+    background-color: white;
+    border-radius: 8px;
+    cursor: crosshair;
+    touch-action: none; /* Mencegah scrolling saat menggambar di mobile */
+}
+
+.submit-art-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: var(--accent-pink);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-art-btn:hover {
+    filter: brightness(1.2);
+}
+
+.submit-art-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
