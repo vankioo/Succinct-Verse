@@ -63,26 +63,39 @@
         </div>
     </div>
     
-    <div id="community-board-modal" class="modal-container hidden">
-        <div class="modal-overlay"></div>
-        <div class="modal-content wide">
-            <button id="close-community-modal" class="modal-close-btn">&times;</button>
-            <h2>Community Board</h2>
-            <p>Leave your mark on this shared canvas!</p>
+   <div id="community-board-modal" class="modal-container hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content wide">
+        <button id="close-community-modal" class="modal-close-btn">&times;</button>
+        <h2>Community Memorial Wall</h2>
+        
+        <div id="gallery-view">
+            <div class="gallery-header">
+                <p>All art contributed by the Succinct Verse community.</p>
+                <button id="go-to-drawing-btn" class="submit-art-btn small">Add Your Art</button>
+            </div>
+            <div id="art-gallery-container">
+                <p class="loading-text">Loading memorial wall...</p>
+            </div>
+        </div>
+
+        <div id="drawing-view" class="hidden">
+            <p>Signed in as <strong id="username-display">@username</strong>. Draw anything!</p>
             <div class="drawing-area">
                 <div class="tools">
-                    <label for="colorPicker">Color:</label>
-                    <input type="color" id="colorPicker" value="#FE11C5">
-                    <label for="brushSize">Size:</label>
-                    <input type="range" id="brushSize" min="1" max="50" value="5">
-                    <button id="eraserBtn">Eraser</button>
-                    <button id="clearBtn">Clear</button>
+                    <label for="colorPicker">Color:</label><input type="color" id="colorPicker" value="#FE11C5">
+                    <label for="brushSize">Size:</label><input type="range" id="brushSize" min="1" max="50" value="5">
+                    <button id="eraserBtn">Eraser</button><button id="clearBtn">Clear</button>
                 </div>
                 <canvas id="drawing-canvas"></canvas>
             </div>
-            <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
+            <div class="drawing-actions">
+                <button id="back-to-gallery-btn">Back to Gallery</button>
+                <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
+            </div>
         </div>
     </div>
+</div>
 
     <script type="module">
         // ===== 1. KONEKSI KE FIREBASE (GANTI DENGAN KUNCI ANDA) =====
