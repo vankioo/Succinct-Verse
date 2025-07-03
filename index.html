@@ -40,7 +40,9 @@
             </div>
         </footer>
     </div>
+    
     <audio id="background-music" src="assets/backsound.mp3" loop></audio>
+    
     <div id="sp1-verifier-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
@@ -48,20 +50,24 @@
             <h2>SP1 Verifier</h2><p>Simulating program execution and ZK proof generation.</p><div id="sp1-console" class="console"></div>
         </div>
     </div>
+    
     <div id="community-board-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content wide">
             <button id="close-community-modal" class="modal-close-btn">&times;</button>
             <h2>Community Memorial Wall</h2>
-            <div id="gallery-view">
-                <div class="gallery-header">
-                    <p>All art contributed by the Succinct Verse community.</p>
-                    <button id="go-to-drawing-btn" class="submit-art-btn small">Add Your Art</button>
+            
+            <div id="username-view">
+                <p>Enter your Twitter username to leave your mark.</p>
+                <div class="input-group">
+                    <span>@</span>
+                    <input type="text" id="username-input" placeholder="username" maxlength="15">
+                    <button id="continue-to-draw-btn">Continue</button>
                 </div>
-                <div id="art-gallery-container"><p class="loading-text">Loading memorial wall...</p></div>
             </div>
+
             <div id="drawing-view" class="hidden">
-                <p>Leave your mark on the canvas!</p>
+                 <p>Drawing as <strong id="username-display">@username</strong>.</p>
                 <div class="drawing-area">
                     <div class="tools">
                         <label for="colorPicker">Color:</label><input type="color" id="colorPicker" value="#FE11C5">
@@ -70,20 +76,16 @@
                     </div>
                     <canvas id="drawing-canvas"></canvas>
                 </div>
-                <div class="drawing-actions">
-                    <button id="back-to-gallery-btn">Back to Gallery</button>
-                    <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
-                </div>
+                <button id="submitArtBtn" class="submit-art-btn">Lock In Your Art</button>
             </div>
         </div>
     </div>
 
     <script type="module">
-        // ===== 1. KONEKSI FIREBASE (PASTIKAN KUNCI ANDA BENAR) =====
+        // ===== 1. FIREBASE CONNECTION (REPLACE WITH YOUR KEYS) =====
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-
+        import { getFirestore, collection, addDoc, getDocs, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyCFKSgYfeR_Gql7qZdP5_EYVw-BO5VkNCE",
             authDomain: "succinct-comboard.firebaseapp.com",
@@ -95,30 +97,99 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const auth = getAuth(app);
         const artCollection = collection(db, "arts");
-        let currentUser = null;
-
-        // Coba login saat halaman pertama kali dimuat
-        signInAnonymously(auth).catch((error) => console.error("Anonymous sign-in failed:", error));
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                console.log("User signed in anonymously:", user.uid);
-            } else {
-                currentUser = null;
-            }
-        });
-
-        // ===== 2. KODE UI DASAR (TIDAK BERUBAH) =====
-        // ... (Semua kode UI lama seperti tombol enter, jam, notifikasi tetap di sini)
+        
+        // ===== 2. CORE UI LOGIC (REMAINS THE SAME) =====
         const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
 
-        // ===== 3. PENGATURAN POPUP/MODAL (TIDAK BERUBAH) =====
+        // ===== 3. MODAL (POPUP) CONTROLLER =====
         function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}const consoleOutput=document.getElementById("sp1-console"),verificationSteps=["Initializing ZKVM...","Compiling program...","Generating proof...","✅ Execution Verified."];function runConsoleAnimation(){if(consoleOutput){consoleOutput.innerHTML="";let t=0;const o=setInterval(()=>{if(t<verificationSteps.length){const n=document.createElement("span");n.className="console-line",n.textContent=`> ${verificationSteps[t]}`,consoleOutput.appendChild(n),consoleOutput.scrollTop=consoleOutput.scrollHeight,t++}else clearInterval(o)},800)}}setupModal("open-sp1-verifier","sp1-verifier-modal","close-sp1-modal",runConsoleAnimation);
 
-        // ===== 4. PENGATURAN COMMUNITY BOARD (PERBAIKAN TOTAL) =====
-        const galleryView=document.getElementById("gallery-view"),drawingView=document.getElementById("drawing-view"),goToDrawingBtn=document.getElementById("go-to-drawing-btn"),backToGalleryBtn=document.getElementById("back-to-gallery-btn"),galleryContainer=document.getElementById("art-gallery-container"),canvas=document.getElementById("drawing-canvas");if(canvas&&galleryView){goToDrawingBtn.addEventListener("click",async()=>{const t=await checkIfUserHasDrawn();t?(alert("You have already submitted your art for the memorial!"),backToGalleryBtn.click()):(galleryView.classList.add("hidden"),drawingView.classList.remove("hidden"),setupCanvas())}),backToGalleryBtn.addEventListener("click",()=>{drawingView.classList.add("hidden"),galleryView.classList.remove("hidden")});async function loadAllArt(){galleryContainer.innerHTML='<p class="loading-text">Loading memorial wall...</p>';try{const t=await getDocs(query(artCollection,orderBy("createdAt","desc")));if(galleryContainer.innerHTML="",t.empty)galleryContainer.innerHTML='<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';else{t.forEach(t=>{const o=t.data(),n=document.createElement("div");n.className="art-piece";const a=new Image;a.src=o.imageData,n.appendChild(a),galleryContainer.appendChild(n)})}}catch(t){console.error("Failed to load art:",t),galleryContainer.innerHTML='<p class="loading-text">Could not load the memorial wall. Please try again later.</p>'}}async function checkIfUserHasDrawn(){if(!currentUser)return!1;const t=query(artCollection,where("userId","==",currentUser.uid),limit(1)),o=await getDocs(t);return!o.empty}setupModal("open-community-board","community-board-modal","close-community-modal",loadAllArt);const ctx=canvas.getContext("2d"),colorPicker=document.getElementById("colorPicker"),brushSize=document.getElementById("brushSize"),eraserBtn=document.getElementById("eraserBtn"),clearBtn=document.getElementById("clearBtn"),submitArtBtn=document.getElementById("submitArtBtn");let isDrawing=!1,isEraser=!1;function setupCanvas(){const t=canvas.parentElement;canvas.width=t.clientWidth,canvas.height=400,ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height),ctx.lineJoin="round",ctx.lineCap="round",submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}function startDrawing(t){isDrawing=!0,draw(t)}function stopDrawing(){isDrawing=!1,ctx.beginPath()}function draw(t){if(isDrawing){t.preventDefault();const o=canvas.getBoundingClientRect(),n=(t.clientX||t.touches[0].clientX)-o.left,a=(t.clientY||t.touches[0].clientY)-o.top;ctx.lineWidth=brushSize.value,ctx.strokeStyle=isEraser?"white":colorPicker.value,ctx.lineTo(n,a),ctx.stroke(),ctx.beginPath(),ctx.moveTo(n,a)}}canvas.addEventListener("pointerdown",startDrawing),canvas.addEventListener("pointerup",stopDrawing),canvas.addEventListener("pointerout",stopDrawing),canvas.addEventListener("pointermove",draw),clearBtn.addEventListener("click",()=>{ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height)}),eraserBtn.addEventListener("click",()=>{isEraser=!isEraser,eraserBtn.classList.toggle("active",isEraser)}),submitArtBtn.addEventListener("click",async()=>{if(!currentUser)return void alert("Authentication error. Please refresh and try again.");try{const t=canvas.toDataURL("image/png");submitArtBtn.disabled=!0,submitArtBtn.textContent="Saving...",await addDoc(artCollection,{userId:currentUser.uid,imageData:t,createdAt:new Date}),alert("Your art has been saved to the memorial wall!"),submitArtBtn.textContent="Thank You!",backToGalleryBtn.click()}catch(t){console.error("Error saving art:",t),alert("Sorry, could not save your art."),submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}})}
+        // ===== 4. COMMUNITY BOARD LOGIC (FINAL VERSION) =====
+        const usernameView = document.getElementById('username-view');
+        const drawingView = document.getElementById('drawing-view');
+        const usernameInput = document.getElementById('username-input');
+        const continueBtn = document.getElementById('continue-to-draw-btn');
+        const usernameDisplay = document.getElementById('username-display');
+        const canvas = document.getElementById('drawing-canvas');
+        let currentUsername = '';
+
+        continueBtn.addEventListener('click', async () => {
+            const username = usernameInput.value.trim();
+            if (!username) { alert('Please enter a username.'); return; }
+            
+            const q = query(artCollection, where("username", "==", username.toLowerCase()), limit(1));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                alert(`Username @${username} has already submitted art. Please choose another.`);
+            } else {
+                currentUsername = username;
+                usernameDisplay.textContent = `@${currentUsername}`;
+                usernameView.classList.add('hidden');
+                drawingView.classList.remove('hidden');
+                setupCanvas();
+            }
+        });
+            
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            const colorPicker = document.getElementById('colorPicker');
+            const brushSize = document.getElementById('brushSize');
+            const eraserBtn = document.getElementById('eraserBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const submitArtBtn = document.getElementById('submitArtBtn');
+            let isDrawing = false, isEraser = false;
+
+            function setupCanvas() {
+                const area = canvas.parentElement;
+                canvas.width = area.clientWidth;
+                canvas.height = 400;
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                submitArtBtn.disabled = false;
+                submitArtBtn.textContent = 'Lock In Your Art';
+                canvas.style.pointerEvents = 'auto';
+            }
+
+            function startDrawing(e) { isDrawing = true; draw(e); }
+            function stopDrawing() { isDrawing = false; ctx.beginPath(); }
+            function draw(e) { if (!isDrawing) return; e.preventDefault(); const t = canvas.getBoundingClientRect(), o = (e.clientX || e.touches[0].clientX) - t.left, n = (e.clientY || e.touches[0].clientY) - t.top; ctx.lineWidth = brushSize.value, ctx.strokeStyle = isEraser ? "white" : colorPicker.value, ctx.lineTo(o, n), ctx.stroke(), ctx.beginPath(), ctx.moveTo(o, n) }
+            canvas.addEventListener('pointerdown', startDrawing);
+            canvas.addEventListener('pointerup', stopDrawing);
+            canvas.addEventListener('pointerout', stopDrawing);
+            canvas.addEventListener('pointermove', draw);
+            clearBtn.addEventListener('click', () => { ctx.fillStyle = "white"; ctx.fillRect(0, 0, canvas.width, canvas.height); });
+            eraserBtn.addEventListener('click', () => { isEraser = !isEraser; eraserBtn.classList.toggle('active', isEraser); });
+
+            submitArtBtn.addEventListener('click', async () => {
+                if (!currentUsername) { alert("Please enter a username first."); return; }
+                try {
+                    const imageData = canvas.toDataURL('image/png');
+                    submitArtBtn.disabled = true;
+                    submitArtBtn.textContent = "Saving...";
+                    await addDoc(artCollection, { username: currentUsername.toLowerCase(), imageData: imageData, createdAt: new Date() });
+                    alert("Your art has been saved to the memorial wall!");
+                    // Hide the drawing view and close the modal
+                    document.getElementById('close-community-modal').click();
+                } catch (error) {
+                    console.error("Error saving art:", error);
+                    alert("Sorry, could not save your art.");
+                    submitArtBtn.disabled = false;
+                    submitArtBtn.textContent = "Lock In Your Art";
+                }
+            });
+
+            // Initial setup for the modal
+            setupModal('open-community-board', 'community-board-modal', 'close-community-modal', () => {
+                // Always show username view first when opening
+                drawingView.classList.add('hidden');
+                usernameView.classList.remove('hidden');
+                usernameInput.value = '';
+            });
+        }
     </script>
 </body>
 </html>
