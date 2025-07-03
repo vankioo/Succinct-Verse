@@ -150,8 +150,8 @@
             } else {
                 currentUsername = username;
                 usernameDisplay.textContent = `@${currentUsername}`;
-                showView(drawingView);
                 setupCanvas();
+                showView(drawingView);
             }
         });
 
@@ -170,11 +170,14 @@
                         artPiece.className = 'art-piece';
                         const img = new Image();
                         img.src = art.imageData;
+                        
+                        // INI BAGIAN BARU: Menambahkan label username
                         const userLabel = document.createElement('span');
                         userLabel.className = 'art-username';
                         userLabel.textContent = `@${art.username}`;
+
                         artPiece.appendChild(img);
-                        artPiece.appendChild(userLabel);
+                        artPiece.appendChild(userLabel); // Tambahkan label ke dalam container
                         galleryContainer.appendChild(artPiece);
                     });
                 }
