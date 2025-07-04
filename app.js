@@ -143,18 +143,24 @@
                 view.classList.remove("hidden");
             }
 
-            function setupCanvas() {
-                canvas.width = canvas.parentElement.clientWidth;
-                canvas.height = 400;
-                ctx.fillStyle = "white";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.lineJoin = "round";
-                ctx.lineCap = "round";
-                canvas.style.pointerEvents = "auto";
-                submitArtBtn.disabled = false;
-                submitArtBtn.textContent = "Lock In Your Art";
-            }
+           // Cari fungsi ini di dalam JavaScript Anda
+function setupCanvas() {
+    const area = canvas.parentElement;
+    canvas.width = area.clientWidth;
+    
+    
+    // DENGAN BARIS BARU INI:
+    canvas.height = canvas.width * (3 / 4); // Membuat tinggi kanvas 3/4 dari lebarnya (rasio 4:3)
 
+    // Sisa kodenya tetap sama
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    submitArtBtn.disabled = false;
+    submitArtBtn.textContent = 'Lock In Your Art';
+    canvas.style.pointerEvents = 'auto';
+}
             if (continueBtn && usernameInput && usernameDisplay && canvas) {
                 continueBtn.addEventListener("click", async () => {
                     const entered = usernameInput.value.trim();
