@@ -211,28 +211,23 @@ body {
     .menu-left > span:not(.app-name), #date-widget { display: none; }
     .top-menubar { padding: 0 10px; }
     #welcome-logo { max-width: 280px; } /* Ukuran logo di mobile */
-    @media (max-width: 768px) {
     /* Dock adjustments */
   .dock-container {
-        width: 95%;
-        gap: 5px;
-        justify-content: center;
-        flex-wrap: wrap; 
-        padding: 5px;
+        /* Membatasi lebar agar tidak keluar layar dan bisa di-scroll */
+        max-width: 95vw; 
+        overflow-x: auto; /* KUNCI UTAMA: Membuat bisa di-scroll ke samping */
+        
+        /* Membuat scroll lebih halus & menyembunyikan scrollbar */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
     }
-    .dock-item {
-        width: 65px;
-        height: 60px;
+    
+    .dock-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
     }
-    .dock-item img {
-        width: 35px;
-        height: 35px;
-    }
+
     .dock-item span {
-        font-size: 10px;
-    }
-    .separator {
-        display: none; /* Hide the separator on mobile */
+        font-size: 10px; /* Sedikit kecilkan font di mobile */
     }
     .modal-content { padding: 15px; }
     .modal-content.wide { max-width: 100%; }
