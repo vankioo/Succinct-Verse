@@ -86,7 +86,7 @@ body {
 .desktop-icon.disabled { opacity: 0.6; cursor: not-allowed; }
 .desktop-icon.disabled:hover { background-color: transparent; transform: none; }
 
-/* ===== 3. DOCK ===== */
+/* ===== 3. DOCK (VERSI GAMBAR) ===== */
 .dock {
     position: fixed;
     bottom: 10px;
@@ -117,10 +117,15 @@ body {
     padding-top: 5px;
     cursor: pointer;
 }
-.dock-item i {
-    font-size: 36px;
-    margin-bottom: 10px;
+
+/* BAGIAN YANG BERUBAH: Mengatur gambar, bukan ikon font */
+.dock-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    object-fit: contain; /* Memastikan gambar tidak gepeng */
 }
+
 .dock-item span {
     font-size: 12px;
     font-family: 'Inter', 'Segoe UI', sans-serif;
