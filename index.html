@@ -9,10 +9,9 @@
 </head>
 <body>
 
-   <div id="welcome-screen">
-    <div class="welcome-box">
-        <img src="assets/images/succinctverse.png" alt="Succinct Verse Logo" id="welcome-logo">
-        
+  <div id="welcome-screen">
+    <div class="welcome-content">
+        <img src="assets/images/succinct-verse-logo.png" alt="Succinct Verse Logo" id="welcome-logo">
         <button id="enter-btn">Click to Enter</button>
     </div>
 </div>
@@ -120,8 +119,43 @@
         document.addEventListener('DOMContentLoaded', function() {
             
             // --- LOGIKA UI DASAR (TOMBOL ENTER, JAM, NOTIFIKASI) ---
-            const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
+         <script>
+    // ===== SEMUA LOGIKA DIMASUKKAN DALAM SATU EVENT LISTENER INI =====
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- INI BAGIAN YANG DIPERBAIKI: LOGIKA UNTUK WELCOME SCREEN & MUSIK ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainApp = document.getElementById('main-app');
+        const music = document.getElementById('background-music');
 
+        if (welcomeScreen) {
+            // Pemicu sekarang adalah seluruh layar, bukan tombol
+            welcomeScreen.addEventListener('click', () => {
+                // Logika musik dan menampilkan aplikasi utama
+                if (music) {
+                    music.volume = 0.3;
+                    music.play().catch(e => console.error("Audio play failed:", e));
+                }
+                
+                // Transisi fade-out yang halus
+                if (welcomeScreen) {
+                    welcomeScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        welcomeScreen.style.display = 'none';
+                    }, 500); // Waktu cocok dengan transisi di CSS
+                }
+                
+                if (mainApp) mainApp.classList.remove('hidden');
+                
+            }, { once: true }); // Hanya bisa diklik sekali
+        }
+
+        // --- SISA KODE (NOTIFIKASI, JAM, DLL. TIDAK BERUBAH) ---
+        const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
+
+        // ... Semua kode untuk popup Community Board dan SP1 Verifier akan ada di sini ...
+    });
+</script>
             // --- PENGATURAN SEMUA POPUP/MODAL ---
             function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
             
