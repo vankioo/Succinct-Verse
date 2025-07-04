@@ -16,6 +16,7 @@
             <button id="enter-btn">Click to Enter</button>
         </div>
     </div>
+    
     <div id="main-app" class="hidden">
         <header class="top-menubar">
             <div class="menu-left"><span class="app-name">Succinct Verse</span></div>
@@ -27,13 +28,13 @@
         </header>
         <main class="desktop">
             <a href="https://succinct-network.vercel.app/" target="_blank" class="desktop-icon"><img src="assets/images/icon1.png" alt="ZK Constellation"><span>ZK Constellation</span></a>
-            <a href="" target="_blank" class="desktop-icon"><img src="assets/images/icon3.png" alt="Proof of Synergy"><span>Proof of Synergy</span></a>
+            <a href="#" class="desktop-icon disabled" title="Coming Soon!"><img src="assets/images/icon3.png" alt="Proof of Synergy"><span>Proof of Synergy</span></a>
             <a href="https://succinct-zk-forge.vercel.app/" target="_blank" class="desktop-icon"><img src="assets/images/icon2.png" alt="ZK Forge"><span>ZK Forge</span></a>
         </main>
         <footer class="dock">
             <div class="dock-container">
                 <a href="javascript:void(0);" id="open-community-board" class="dock-item" title="Community Board"><img src="assets/images/succinct.svg" alt="Community Board"><span>Community Board</span></a>
-                <a href="javascript:void(0);" id="open-sp1-verifier" class="dock-item" title="SP1 Verifier"><img src="assets/images/ethereum.png" alt="SP1 Verifier"><span>SP1 Verifier</span></a>
+                <a href="javascript:void(0);" id="open-sp1-verifier" class="dock-item" title="SP1 Verifier"><img src="assets/images/ethereum.svg" alt="SP1 Verifier"><span>SP1 Verifier</span></a>
                 <div class="separator"></div>
                 <a href="https://twitter.com/Duskiesoul" target="_blank" class="dock-item" title="Twitter/X"><img src="assets/images/icon-twitter.png" alt="Twitter/X"><span>Twitter/X</span></a>
                 <a href="https://discord.gg/succinctlabs" target="_blank" class="dock-item" title="Discord"><img src="assets/images/icon-discord.png" alt="Discord"><span>Discord</span></a>
@@ -41,15 +42,17 @@
         </footer>
     </div>
     <audio id="background-music" src="assets/backsound.mp3" loop></audio>
+
     <div id="sp1-verifier-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <button id="close-sp1-modal" class="modal-close-btn">&times;</button>
             <h2>SP1 Verifier Demo</h2>
-            <p>look at how a ZK proof is made.</p>
+            <p>An educational look at how a ZK proof is made.</p>
             <div id="sp1-educational-console" class="console"></div>
         </div>
     </div>
+    
     <div id="community-board-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content wide">
@@ -112,9 +115,9 @@
             // --- LOGIKA UI DASAR (TOMBOL ENTER, JAM, NOTIFIKASI) ---
             const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
 
-            // --- PENGATURAN SEMUA POPUP/MODAL ---
+            // --- PENGONTROL POPUP UMUM ---
             function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
-            
+
             // --- LOGIKA SP1 VERIFIER ---
             const eduConsole = document.getElementById("sp1-educational-console");
             async function runEducationalAnimation() {
