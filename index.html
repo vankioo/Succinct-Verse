@@ -46,7 +46,9 @@
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <button id="close-sp1-modal" class="modal-close-btn">×</button>
-            <h2>SP1 Verifier</h2><p>Simulating program execution and ZK proof generation.</p><div id="sp1-console" class="console"></div>
+            <h2>SP1 Verifier Demo</h2>
+            <p>An educational look at how a ZK proof is made.</p>
+            <div id="sp1-educational-console" class="console"></div>
         </div>
     </div>
     
@@ -109,21 +111,21 @@
         // ===== 2. KODE UI DASAR (TIDAK BERUBAH) =====
         const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
 
-        // ===== 3. PENGATURAN SEMUA POPUP/MODAL (TIDAK BERUBAH) =====
+        // ===== 3. PENGATURAN SEMUA POPUP/MODAL =====
         function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
-
-        // ===== 4. LOGIKA SP1 VERIFIER (VERSI BARU: TERMINAL RUN) =====
-        const sp1Console = document.getElementById("sp1-console");
         
-        async function runTerminalAnimation() {
-            if (!sp1Console) return;
-            sp1Console.innerHTML = ''; // Selalu bersihkan konsol
+        // ===== 4. LOGIKA SP1 VERIFIER (VERSI EDUKATIF DENGAN TERMINAL RUN) =====
+        const eduConsole = document.getElementById("sp1-educational-console");
+        
+        async function runEducationalTerminalAnimation() {
+            if (!eduConsole) return;
+            eduConsole.innerHTML = ''; // Selalu bersihkan konsol
             const delay = ms => new Promise(res => setTimeout(res, ms));
 
             const steps = [
-                { text: "Initializing ZKVM...", time: 1000 },
-                { text: "Compiling program...", time: 1500 },
-                { text: "Generating proof...", time: 2000 },
+                { text: "Initializing ZKVM...", desc: "Preparing the Zero-Knowledge Virtual Machine.", time: 1000 },
+                { text: "Compiling program...", desc: "Translating Rust code into verifiable instructions.", time: 1500 },
+                { text: "Generating proof...", desc: "Creating a compact cryptographic proof from the execution trace.", time: 2000 },
             ];
 
             for (const step of steps) {
@@ -134,19 +136,23 @@
                 const spinner = document.createElement('span');
                 spinner.className = 'spinner';
                 line.appendChild(spinner);
-                sp1Console.appendChild(line);
+                eduConsole.appendChild(line);
 
-                // Animasikan spinner
+                const desc = document.createElement('div');
+                desc.className = 'step-desc';
+                desc.textContent = step.desc;
+                eduConsole.appendChild(desc);
+
                 const spinnerChars = ['|', '/', '-', '\\'];
                 let i = 0;
                 const spinInterval = setInterval(() => {
                     spinner.textContent = spinnerChars[i++ % spinnerChars.length];
                 }, 100);
 
-                await delay(step.time); // Tunggu sesuai waktu proses
+                await delay(step.time);
                 
-                clearInterval(spinInterval); // Hentikan spinner
-                spinner.textContent = ''; // Hapus karakter spinner
+                clearInterval(spinInterval);
+                spinner.textContent = '';
                 
                 const status = document.createElement('span');
                 status.className = 'status';
@@ -154,14 +160,13 @@
                 line.appendChild(status);
             }
 
-            // Tampilkan hasil akhir
             await delay(500);
             const finalLine = document.createElement('div');
             finalLine.className = 'console-line';
             finalLine.innerHTML = '<span class="status">✅ Execution Verified.</span>';
-            sp1Console.appendChild(finalLine);
+            eduConsole.appendChild(finalLine);
         }
-        setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runTerminalAnimation);
+        setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runEducationalTerminalAnimation);
 
 
         // ===== 5. LOGIKA COMMUNITY BOARD (TIDAK BERUBAH) =====
