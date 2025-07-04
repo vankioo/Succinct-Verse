@@ -322,3 +322,9 @@ body {
 .final-analogy strong {
     color: var(--accent-pink);
 }
+#welcome-logo {
+    max-width: 450px; /* Atur lebar maksimal logo */
+    width: 90%;       /* Buat agar responsif */
+    height: auto;     /* Jaga rasio aspek gambar */
+    margin-bottom: 15px; /* Beri jarak ke teks di bawahnya */
+}
