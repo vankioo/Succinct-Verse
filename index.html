@@ -54,13 +54,16 @@
     </div>
     <audio id="background-music" src="assets/backsound.mp3" loop></audio>
 
-    <div id="sp1-verifier-modal" class="modal-container hidden">
-        <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <button id="close-sp1-modal" class="modal-close-btn">&times;</button>
-            <h2>SP1 Verifier</h2><p>Simulating program execution and ZK proof generation.</p><div id="sp1-console" class="console"></div>
-        </div>
+  <div id="sp1-verifier-modal" class="modal-container hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <button id="close-sp1-modal" class="modal-close-btn">&times;</button>
+        <h2>SP1 Verifier Demo</h2>
+        <p>An educational look at how a ZK proof is made.</p>
+        <div id="sp1-educational-console" class="console">
+            </div>
     </div>
+</div>
     
     <div id="community-board-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
@@ -101,73 +104,81 @@
         </div>
     </div>
 
-    <script type="module">
-        // ===== 1. KONEKSI FIREBASE (GANTI DENGAN KUNCI ANDA) =====
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+  <script type="module">
+    // ===== 1. KONEKSI FIREBASE (TIDAK BERUBAH) =====
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+    const firebaseConfig = { /* ... Kunci Firebase Anda ... */ };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const artCollection = collection(db, "arts");
+    
+    // ===== 2. KODE UI DASAR (TIDAK BERUBAH) =====
+    // ... (Semua kode UI lama Anda tetap di sini)
+    const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
+    
+    // ===== 3. PENGATURAN POPUP/MODAL (TIDAK BERUBAH) =====
+    function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
+
+    // ===== 4. LOGIKA SP1 VERIFIER (VERSI EDUKATIF BARU) =====
+    const eduConsole = document.getElementById("sp1-educational-console");
+    
+    function createStep(title, description, element) {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'step';
+        stepDiv.innerHTML = `<div class="step-title">> ${title}</div><div class="step-desc">${description}</div>`;
+        if (element) stepDiv.appendChild(element);
+        eduConsole.appendChild(stepDiv);
+        return stepDiv;
+    }
+
+    async function runEducationalAnimation() {
+        if (!eduConsole) return;
+        eduConsole.innerHTML = ''; // Bersihkan konsol
+
+        const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+        // Step 1: Initialize
+        await delay(500);
+        const step1 = createStep('Initializing ZKVM...', 'Preparing the Zero-Knowledge Virtual Machine to run our program.');
+        step1.classList.add('visible');
+
+        // Step 2: Compile
+        await delay(1500);
+        const codeBlock = document.createElement('div');
+        codeBlock.className = 'code-block';
+        codeBlock.innerHTML = `fn fib(n: u32) -> u32 {<br>&nbsp;&nbsp;if n <= 1 { return n; }<br>&nbsp;&nbsp;fib(n - 1) + fib(n - 2)<br>}`;
+        const step2 = createStep('Compiling program...', 'Translating Rust code into verifiable instructions for the ZKVM.', codeBlock);
+        step2.classList.add('visible');
+
+        // Step 3: Generate Proof
+        await delay(2000);
+        const traceBlock = document.createElement('div');
+        traceBlock.className = 'trace-block';
+        traceBlock.style.height = '100px';
+        traceBlock.textContent = 'Huge Execution Trace Data';
+        const step3 = createStep('Generating proof...', 'Creating a compact cryptographic proof from the execution trace.', traceBlock);
+        step3.classList.add('visible');
         
-        const firebaseConfig = {
-            apiKey: "AIzaSyCFKSgYfeR_Gql7qZdP5_EYVw-BO5VkNCE",
-            authDomain: "succinct-comboard.firebaseapp.com",
-            projectId: "succinct-comboard",
-            storageBucket: "succinct-comboard.appspot.com",
-            messagingSenderId: "853910523370",
-            appId: "1:853910523370:web:f0b2e11ba95067bc35f693"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const artCollection = collection(db, "arts");
-        
-        // ===== 2. KODE UI DASAR (TIDAK BERUBAH) =====
-        const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
+        await delay(1000);
+        traceBlock.classList.add('proof'); // Animasikan menjadi kecil
+        traceBlock.textContent = 'Tiny ZK Proof';
 
-        // ===== 3. PENGATURAN SEMUA POPUP/MODAL =====
-        function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
+        // Step 4: Verify
+        await delay(1500);
+        const finalMetrics = document.createElement('div');
+        finalMetrics.id = 'final-metrics';
+        finalMetrics.innerHTML = 'Proof Size: 8.2 KB | Verification Time: 12ms';
+        const step4 = createStep('✅ Execution Verified.', 'The proof is valid! The program ran correctly.', finalMetrics);
+        step4.classList.add('visible');
+    }
+    setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runEducationalAnimation);
 
-        // --- PENGATURAN SP1 VERIFIER (VERSI BARU DENGAN ANIMASI KEREN) ---
-        const sp1Console = document.getElementById("sp1-console");
-        const verificationSteps = ["Initializing ZKVM...", "Compiling program...", "Generating proof...", "✅ Execution Verified."];
-        
-        async function runConsoleAnimation() {
-            if (!sp1Console) return;
-            sp1Console.innerHTML = '';
-            sp1Console.classList.remove('success-glow'); // Hapus glow dari sesi sebelumnya
-            
-            for (const step of verificationSteps) {
-                await typeLine(step);
-            }
-
-            // Tambahkan efek glow di akhir
-            sp1Console.classList.add('success-glow');
-            setTimeout(() => sp1Console.classList.remove('success-glow'), 1200); // Hapus glow setelah 1.2 detik
-        }
-
-        function typeLine(text) {
-            return new Promise(resolve => {
-                const line = document.createElement('span');
-                line.className = 'console-line';
-                sp1Console.appendChild(line);
-
-                const prefix = document.createElement('span');
-                prefix.textContent = '> ';
-                line.appendChild(prefix);
-
-                const textSpan = document.createElement('span');
-                textSpan.className = 'typing';
-                textSpan.textContent = text;
-                line.appendChild(textSpan);
-                
-                sp1Console.scrollTop = sp1Console.scrollHeight;
-
-                // Tunggu animasi ketik selesai + jeda sedikit
-                setTimeout(resolve, 1800); 
-            });
-        }
-        setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runConsoleAnimation);
-
-
-        // ===== 4. LOGIKA COMMUNITY BOARD (TIDAK BERUBAH) =====
-        const galleryView=document.getElementById("gallery-view"),usernameView=document.getElementById("username-view"),drawingView=document.getElementById("drawing-view"),addArtBtn=document.getElementById("add-your-art-btn"),backToGalleryBtn1=document.getElementById("back-to-gallery-btn-from-username"),backToUsernameBtn=document.getElementById("back-to-username-btn"),galleryContainer=document.getElementById("art-gallery-container"),usernameInput=document.getElementById("username-input"),continueBtn=document.getElementById("continue-to-draw-btn"),usernameDisplay=document.getElementById("username-display"),canvas=document.getElementById("drawing-canvas");let currentUsername="";function showView(e){[galleryView,usernameView,drawingView].forEach(t=>t.classList.add("hidden")),e.classList.remove("hidden")}addArtBtn.addEventListener("click",()=>showView(usernameView)),backToGalleryBtn1.addEventListener("click",()=>showView(galleryView)),backToUsernameBtn.addEventListener("click",()=>showView(usernameView)),continueBtn.addEventListener("click",async()=>{const e=usernameInput.value.trim();if(e){const t=query(artCollection,where("username","==",e.toLowerCase()),limit(1));(await getDocs(t)).empty?(currentUsername=e,usernameDisplay.textContent=`@${currentUsername}`,setupCanvas(),showView(drawingView)):alert(`Username @${e} has already submitted art. Please choose another.`)}else alert("Please enter a username.")});async function loadAllArt(){galleryContainer.innerHTML='<p class="loading-text">Loading memorial wall...</p>';try{const e=await getDocs(query(artCollection,orderBy("createdAt","desc")));if(galleryContainer.innerHTML="",e.empty)galleryContainer.innerHTML='<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';else{e.forEach(e=>{const t=e.data(),o=document.createElement("div");o.className="art-piece";const n=new Image;n.src=t.imageData;const a=document.createElement("span");a.className="art-username",a.textContent=`@${t.username}`,o.appendChild(n),o.appendChild(a),galleryContainer.appendChild(o)})}}catch(e){console.error("Failed to load art:",e),galleryContainer.innerHTML='<p class="loading-text">Could not load the memorial wall. Please try again later.</p>'}}setupModal("open-community-board","community-board-modal","close-community-modal",()=>{showView(galleryView),loadAllArt()});if(canvas){const ctx=canvas.getContext("2d"),colorPicker=document.getElementById("colorPicker"),brushSize=document.getElementById("brushSize"),eraserBtn=document.getElementById("eraserBtn"),clearBtn=document.getElementById("clearBtn"),submitArtBtn=document.getElementById("submitArtBtn");let isDrawing=!1,isEraser=!1;function setupCanvas(){const e=canvas.parentElement;canvas.width=e.clientWidth,canvas.height=400,ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height),ctx.lineJoin="round",ctx.lineCap="round",submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art",canvas.style.pointerEvents="auto"}function startDrawing(e){isDrawing=!0,draw(e)}function stopDrawing(){isDrawing=!1,ctx.beginPath()}function draw(e){if(isDrawing){e.preventDefault();const t=canvas.getBoundingClientRect(),o=(e.clientX||e.touches[0].clientX)-t.left,n=(e.clientY||e.touches[0].clientY)-t.top;ctx.lineWidth=brushSize.value,ctx.strokeStyle=isEraser?"white":colorPicker.value,ctx.lineTo(o,n),ctx.stroke(),ctx.beginPath(),ctx.moveTo(o,n)}}canvas.addEventListener("pointerdown",startDrawing),canvas.addEventListener("pointerup",stopDrawing),canvas.addEventListener("pointerout",stopDrawing),canvas.addEventListener("pointermove",draw),clearBtn.addEventListener("click",()=>{ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height)}),eraserBtn.addEventListener("click",()=>{isEraser=!isEraser,eraserBtn.classList.toggle("active",isEraser)}),submitArtBtn.addEventListener("click",async()=>{if(currentUsername)try{const e=canvas.toDataURL("image/png");submitArtBtn.disabled=!0,submitArtBtn.textContent="Saving...",await addDoc(artCollection,{username:currentUsername.toLowerCase(),imageData:e,createdAt:new Date}),alert("Your art has been saved to the memorial wall!"),showView(galleryView),loadAllArt()}catch(e){console.error("Error saving art:",e),alert("Sorry, could not save your art."),submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}else alert("An error occurred. Please go back and re-enter your username.")})}
+    // ===== 5. LOGIKA COMMUNITY BOARD (TIDAK BERUBAH) =====
+    // ... (Semua kode Community Board dari jawaban sebelumnya tetap di sini)
+    const galleryView=document.getElementById("gallery-view"),usernameView=document.getElementById("username-view"),drawingView=document.getElementById("drawing-view"),addArtBtn=document.getElementById("add-your-art-btn"),backToGalleryBtn1=document.getElementById("back-to-gallery-btn-from-username"),backToUsernameBtn=document.getElementById("back-to-username-btn"),galleryContainer=document.getElementById("art-gallery-container"),usernameInput=document.getElementById("username-input"),continueBtn=document.getElementById("continue-to-draw-btn"),usernameDisplay=document.getElementById("username-display"),canvas=document.getElementById("drawing-canvas");let currentUsername="";function showView(e){[galleryView,usernameView,drawingView].forEach(t=>t.classList.add("hidden")),e.classList.remove("hidden")}addArtBtn.addEventListener("click",()=>showView(usernameView)),backToGalleryBtn1.addEventListener("click",()=>showView(galleryView)),backToUsernameBtn.addEventListener("click",()=>showView(usernameView)),continueBtn.addEventListener("click",async()=>{const e=usernameInput.value.trim();if(e){const t=query(artCollection,where("username","==",e.toLowerCase()),limit(1));(await getDocs(t)).empty?(currentUsername=e,usernameDisplay.textContent=`@${currentUsername}`,setupCanvas(),showView(drawingView)):alert(`Username @${e} has already submitted art. Please choose another.`)}else alert("Please enter a username.")});async function loadAllArt(){galleryContainer.innerHTML='<p class="loading-text">Loading memorial wall...</p>';try{const e=await getDocs(query(artCollection,orderBy("createdAt","desc")));if(galleryContainer.innerHTML="",e.empty)galleryContainer.innerHTML='<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';else{e.forEach(e=>{const t=e.data(),o=document.createElement("div");o.className="art-piece";const n=new Image;n.src=t.imageData;const a=document.createElement("span");a.className="art-username",a.textContent=`@${t.username}`,o.appendChild(n),o.appendChild(a),galleryContainer.appendChild(o)})}}catch(e){console.error("Failed to load art:",e),galleryContainer.innerHTML='<p class="loading-text">Could not load the memorial wall. Please try again later.</p>'}}setupModal("open-community-board","community-board-modal","close-community-modal",()=>{showView(galleryView),loadAllArt()});if(canvas){const ctx=canvas.getContext("2d"),colorPicker=document.getElementById("colorPicker"),brushSize=document.getElementById("brushSize"),eraserBtn=document.getElementById("eraserBtn"),clearBtn=document.getElementById("clearBtn"),submitArtBtn=document.getElementById("submitArtBtn");let isDrawing=!1,isEraser=!1;function setupCanvas(){const e=canvas.parentElement;canvas.width=e.clientWidth,canvas.height=400,ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height),ctx.lineJoin="round",ctx.lineCap="round",submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art",canvas.style.pointerEvents="auto"}function startDrawing(e){isDrawing=!0,draw(e)}function stopDrawing(){isDrawing=!1,ctx.beginPath()}function draw(e){if(isDrawing){e.preventDefault();const t=canvas.getBoundingClientRect(),o=(e.clientX||e.touches[0].clientX)-t.left,n=(e.clientY||e.touches[0].clientY)-t.top;ctx.lineWidth=brushSize.value,ctx.strokeStyle=isEraser?"white":colorPicker.value,ctx.lineTo(o,n),ctx.stroke(),ctx.beginPath(),ctx.moveTo(o,n)}}canvas.addEventListener("pointerdown",startDrawing),canvas.addEventListener("pointerup",stopDrawing),canvas.addEventListener("pointerout",stopDrawing),canvas.addEventListener("pointermove",draw),clearBtn.addEventListener("click",()=>{ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height)}),eraserBtn.addEventListener("click",()=>{isEraser=!isEraser,eraserBtn.classList.toggle("active",isEraser)}),submitArtBtn.addEventListener("click",async()=>{if(currentUsername)try{const e=canvas.toDataURL("image/png");submitArtBtn.disabled=!0,submitArtBtn.textContent="Saving...",await addDoc(artCollection,{username:currentUsername.toLowerCase(),imageData:e,createdAt:new Date}),alert("Your art has been saved to the memorial wall!"),showView(galleryView),loadAllArt()}catch(e){console.error("Error saving art:",e),alert("Sorry, could not save your art."),submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}else alert("An error occurred. Please go back and re-enter your username.")})}
     </script>
+</body>
+</html>
 </body>
 </html>
