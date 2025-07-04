@@ -41,7 +41,6 @@
         </footer>
     </div>
     <audio id="background-music" src="assets/backsound.mp3" loop></audio>
-
     <div id="sp1-verifier-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content">
@@ -51,7 +50,6 @@
             <div id="sp1-educational-console" class="console"></div>
         </div>
     </div>
-    
     <div id="community-board-modal" class="modal-container hidden">
         <div class="modal-overlay"></div>
         <div class="modal-content wide">
@@ -108,69 +106,60 @@
         const db = getFirestore(app);
         const artCollection = collection(db, "arts");
         
-        // ===== 2. KODE UI DASAR (TIDAK BERUBAH) =====
-        const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
-
-        // ===== 3. PENGATURAN SEMUA POPUP/MODAL (TIDAK BERUBAH) =====
-        function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
-
-        // ===== 4. LOGIKA SP1 VERIFIER (VERSI EDUKATIF YANG SUDAH DIPERBAIKI) =====
-        const eduConsole = document.getElementById("sp1-educational-console");
-        
-        async function runEducationalAnimation() {
-            if (!eduConsole) return;
-            eduConsole.innerHTML = '';
-            const delay = ms => new Promise(res => setTimeout(res, ms));
-
-            const steps = [
-                { title: 'Initializing ZKVM...', desc: 'Preparing the Zero-Knowledge Virtual Machine to run our program.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box">ZKVM Ready</div>`; return d; }},
-                { title: 'Compiling program...', desc: 'Translating Rust code into verifiable instructions.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box">Rust Code</div><div class="diagram-arrow">→</div><div class="diagram-box">Bytecode</div>`; return d; }},
-                { title: 'Generating proof...', desc: 'Creating a compact cryptographic proof from the full execution trace.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box" id="trace-box" style="padding: 30px 15px;">Execution Trace</div><div class="diagram-arrow">→</div><div class="diagram-box small" id="proof-box">ZK Proof</div>`; return d; }},
-                { title: '✅ Execution Verified.', desc: 'The proof is valid! The program ran correctly.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box small">Final Proof</div>`; return d; }}
-            ];
+        // ===== 2. SEMUA LOGIKA DIMASUKKAN DALAM SATU EVENT LISTENER INI =====
+        document.addEventListener('DOMContentLoaded', function() {
             
-            for (const step of steps) {
-                await delay(1200); // Jeda antar langkah
-                const stepDiv = document.createElement('div');
-                stepDiv.className = 'step';
-                
-                const stepTitle = document.createElement('div');
-                stepTitle.className = 'step-title';
-                stepTitle.textContent = `> ${step.title}`;
-                
-                const stepDesc = document.createElement('div');
-                stepDesc.className = 'step-desc';
-                stepDesc.textContent = step.desc;
+            // --- LOGIKA UI DASAR (TOMBOL ENTER, JAM, NOTIFIKASI) ---
+            const enterBtn=document.getElementById("enter-btn"),welcomeScreen=document.getElementById("welcome-screen"),mainApp=document.getElementById("main-app"),music=document.getElementById("background-music");enterBtn&&enterBtn.addEventListener("click",()=>{music&&(music.volume=.3,music.play().catch(e=>console.error("Audio play failed:",e))),welcomeScreen&&(welcomeScreen.style.display="none"),mainApp&&mainApp.classList.remove("hidden")});const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
 
-                stepDiv.appendChild(stepTitle);
-                if (step.visual) {
-                    stepDiv.appendChild(step.visual());
+            // --- PENGATURAN SEMUA POPUP/MODAL ---
+            function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
+            
+            // --- LOGIKA SP1 VERIFIER ---
+            const eduConsole = document.getElementById("sp1-educational-console");
+            async function runEducationalAnimation() {
+                if (!eduConsole) return;
+                eduConsole.innerHTML = '';
+                const delay = ms => new Promise(res => setTimeout(res, ms));
+
+                const steps = [
+                    { title: 'Initializing ZKVM...', desc: 'Preparing the Zero-Knowledge Virtual Machine to run our program.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box">ZKVM Ready</div>`; return d; }},
+                    { title: 'Compiling program...', desc: 'Translating Rust code into verifiable instructions.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box">Rust Code</div><div class="diagram-arrow">→</div><div class="diagram-box">Bytecode</div>`; return d; }},
+                    { title: 'Generating proof...', desc: 'Creating a compact cryptographic proof from the full execution trace.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box" id="trace-box" style="padding: 30px 15px;">Execution Trace</div><div class="diagram-arrow">→</div><div class="diagram-box small" id="proof-box">ZK Proof</div>`; return d; }},
+                    { title: '✅ Execution Verified.', desc: 'The proof is valid! The program ran correctly.', visual: () => { const d = document.createElement('div'); d.className = 'step-diagram'; d.innerHTML = `<div class="diagram-box small">Final Proof</div>`; return d; }}
+                ];
+                
+                for (const step of steps) {
+                    await delay(1200);
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'step';
+                    const stepTitle = document.createElement('div');
+                    stepTitle.className = 'step-title';
+                    stepTitle.textContent = `> ${step.title}`;
+                    const stepDesc = document.createElement('div');
+                    stepDesc.className = 'step-desc';
+                    stepDesc.textContent = step.desc;
+                    stepDiv.appendChild(stepTitle);
+                    if (step.visual) { stepDiv.appendChild(step.visual()); }
+                    stepDiv.appendChild(stepDesc);
+                    eduConsole.appendChild(stepDiv);
+                    requestAnimationFrame(() => { stepDiv.classList.add('visible'); });
+                    eduConsole.scrollTop = eduConsole.scrollHeight;
                 }
-                stepDiv.appendChild(stepDesc);
-                eduConsole.appendChild(stepDiv);
                 
-                // INI BAGIAN PENTING YANG MEMBUATNYA MUNCUL
-                requestAnimationFrame(() => {
-                    stepDiv.classList.add('visible');
-                });
-                
+                await delay(1000);
+                const analogy = document.createElement('div');
+                analogy.className = 'final-analogy step';
+                analogy.innerHTML = "<strong>Analogy:</strong> Instead of showing your entire math homework (the execution trace), you just show a special 'magic checkmark' (the ZK proof) that proves you did it correctly without revealing any of the steps.";
+                eduConsole.appendChild(analogy);
+                requestAnimationFrame(() => { analogy.classList.add('visible'); });
                 eduConsole.scrollTop = eduConsole.scrollHeight;
             }
-            
-            await delay(1000);
-            const analogy = document.createElement('div');
-analogy.className = 'final-analogy step'; // Tambahkan class 'step' agar bisa dianimasikan juga
-            analogy.innerHTML = "<strong>Analogy:</strong> Instead of showing your entire math homework (the execution trace), you just show a special 'magic checkmark' (the ZK proof) that proves you did it correctly without revealing any of the steps.";
-            eduConsole.appendChild(analogy);
-            requestAnimationFrame(() => {
-                analogy.classList.add('visible');
-            });
-            eduConsole.scrollTop = eduConsole.scrollHeight;
-        }
-        setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runEducationalAnimation);
+            setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runEducationalAnimation);
 
-        // ===== 5. LOGIKA COMMUNITY BOARD (TIDAK BERUBAH) =====
-        const galleryView=document.getElementById("gallery-view"),usernameView=document.getElementById("username-view"),drawingView=document.getElementById("drawing-view"),addArtBtn=document.getElementById("add-your-art-btn"),backToGalleryBtn1=document.getElementById("back-to-gallery-btn-from-username"),backToUsernameBtn=document.getElementById("back-to-username-btn"),galleryContainer=document.getElementById("art-gallery-container"),usernameInput=document.getElementById("username-input"),continueBtn=document.getElementById("continue-to-draw-btn"),usernameDisplay=document.getElementById("username-display"),canvas=document.getElementById("drawing-canvas");let currentUsername="";function showView(e){[galleryView,usernameView,drawingView].forEach(t=>t.classList.add("hidden")),e.classList.remove("hidden")}addArtBtn.addEventListener("click",()=>showView(usernameView)),backToGalleryBtn1.addEventListener("click",()=>showView(galleryView)),backToUsernameBtn.addEventListener("click",()=>showView(usernameView)),continueBtn.addEventListener("click",async()=>{const e=usernameInput.value.trim();if(e){const t=query(artCollection,where("username","==",e.toLowerCase()),limit(1));(await getDocs(t)).empty?(currentUsername=e,usernameDisplay.textContent=`@${currentUsername}`,setupCanvas(),showView(drawingView)):alert(`Username @${e} has already submitted art. Please choose another.`)}else alert("Please enter a username.")});async function loadAllArt(){galleryContainer.innerHTML='<p class="loading-text">Loading memorial wall...</p>';try{const e=await getDocs(query(artCollection,orderBy("createdAt","desc")));if(galleryContainer.innerHTML="",e.empty)galleryContainer.innerHTML='<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';else{e.forEach(e=>{const t=e.data(),o=document.createElement("div");o.className="art-piece";const n=new Image;n.src=t.imageData;const a=document.createElement("span");a.className="art-username",a.textContent=`@${t.username}`,o.appendChild(n),o.appendChild(a),galleryContainer.appendChild(o)})}}catch(e){console.error("Failed to load art:",e),galleryContainer.innerHTML='<p class="loading-text">Could not load the memorial wall. Please try again later.'}}setupModal("open-community-board","community-board-modal","close-community-modal",()=>{showView(galleryView),loadAllArt()});if(canvas){const ctx=canvas.getContext("2d"),colorPicker=document.getElementById("colorPicker"),brushSize=document.getElementById("brushSize"),eraserBtn=document.getElementById("eraserBtn"),clearBtn=document.getElementById("clearBtn"),submitArtBtn=document.getElementById("submitArtBtn");let isDrawing=!1,isEraser=!1;function setupCanvas(){const e=canvas.parentElement;canvas.width=e.clientWidth,canvas.height=400,ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height),ctx.lineJoin="round",ctx.lineCap="round",submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art",canvas.style.pointerEvents="auto"}function startDrawing(e){isDrawing=!0,draw(e)}function stopDrawing(){isDrawing=!1,ctx.beginPath()}function draw(e){if(isDrawing){e.preventDefault();const t=canvas.getBoundingClientRect(),o=(e.clientX||e.touches[0].clientX)-t.left,n=(e.clientY||e.touches[0].clientY)-t.top;ctx.lineWidth=brushSize.value,ctx.strokeStyle=isEraser?"white":colorPicker.value,ctx.lineTo(o,n),ctx.stroke(),ctx.beginPath(),ctx.moveTo(o,n)}}canvas.addEventListener("pointerdown",startDrawing),canvas.addEventListener("pointerup",stopDrawing),canvas.addEventListener("pointerout",stopDrawing),canvas.addEventListener("pointermove",draw),clearBtn.addEventListener("click",()=>{ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height)}),eraserBtn.addEventListener("click",()=>{isEraser=!isEraser,eraserBtn.classList.toggle("active",isEraser)}),submitArtBtn.addEventListener("click",async()=>{if(currentUsername)try{const e=canvas.toDataURL("image/png");submitArtBtn.disabled=!0,submitArtBtn.textContent="Saving...",await addDoc(artCollection,{username:currentUsername.toLowerCase(),imageData:e,createdAt:new Date}),alert("Your art has been saved to the memorial wall!"),showView(galleryView),loadAllArt()}catch(e){console.error("Error saving art:",e),alert("Sorry, could not save your art."),submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}else alert("An error occurred. Please go back and re-enter your username.")})}
+            // --- LOGIKA COMMUNITY BOARD ---
+            const galleryView=document.getElementById("gallery-view"),usernameView=document.getElementById("username-view"),drawingView=document.getElementById("drawing-view"),addArtBtn=document.getElementById("add-your-art-btn"),backToGalleryBtn1=document.getElementById("back-to-gallery-btn-from-username"),backToUsernameBtn=document.getElementById("back-to-username-btn"),galleryContainer=document.getElementById("art-gallery-container"),usernameInput=document.getElementById("username-input"),continueBtn=document.getElementById("continue-to-draw-btn"),usernameDisplay=document.getElementById("username-display"),canvas=document.getElementById("drawing-canvas");let currentUsername="";function showView(e){[galleryView,usernameView,drawingView].forEach(t=>t.classList.add("hidden")),e.classList.remove("hidden")}addArtBtn.addEventListener("click",()=>showView(usernameView)),backToGalleryBtn1.addEventListener("click",()=>showView(galleryView)),backToUsernameBtn.addEventListener("click",()=>showView(usernameView)),continueBtn.addEventListener("click",async()=>{const e=usernameInput.value.trim();if(e){const t=query(artCollection,where("username","==",e.toLowerCase()),limit(1));(await getDocs(t)).empty?(currentUsername=e,usernameDisplay.textContent=`@${currentUsername}`,setupCanvas(),showView(drawingView)):alert(`Username @${e} has already submitted art. Please choose another.`)}else alert("Please enter a username.")});async function loadAllArt(){galleryContainer.innerHTML='<p class="loading-text">Loading memorial wall...</p>';try{const e=await getDocs(query(artCollection,orderBy("createdAt","desc")));if(galleryContainer.innerHTML="",e.empty)galleryContainer.innerHTML='<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';else{e.forEach(e=>{const t=e.data(),o=document.createElement("div");o.className="art-piece";const n=new Image;n.src=t.imageData;const a=document.createElement("span");a.className="art-username",a.textContent=`@${t.username}`,o.appendChild(n),o.appendChild(a),galleryContainer.appendChild(o)})}}catch(e){console.error("Failed to load art:",e),galleryContainer.innerHTML='<p class="loading-text">Could not load the memorial wall. Please try again later.'}}setupModal("open-community-board","community-board-modal","close-community-modal",()=>{showView(galleryView),loadAllArt()});if(canvas){const ctx=canvas.getContext("2d"),colorPicker=document.getElementById("colorPicker"),brushSize=document.getElementById("brushSize"),eraserBtn=document.getElementById("eraserBtn"),clearBtn=document.getElementById("clearBtn"),submitArtBtn=document.getElementById("submitArtBtn");let isDrawing=!1,isEraser=!1;function setupCanvas(){const e=canvas.parentElement;canvas.width=e.clientWidth,canvas.height=400,ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height),ctx.lineJoin="round",ctx.lineCap="round",submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art",canvas.style.pointerEvents="auto"}function startDrawing(e){isDrawing=!0,draw(e)}function stopDrawing(){isDrawing=!1,ctx.beginPath()}function draw(e){if(isDrawing){e.preventDefault();const t=canvas.getBoundingClientRect(),o=(e.clientX||e.touches[0].clientX)-t.left,n=(e.clientY||e.touches[0].clientY)-t.top;ctx.lineWidth=brushSize.value,ctx.strokeStyle=isEraser?"white":colorPicker.value,ctx.lineTo(o,n),ctx.stroke(),ctx.beginPath(),ctx.moveTo(o,n)}}canvas.addEventListener("pointerdown",startDrawing),canvas.addEventListener("pointerup",stopDrawing),canvas.addEventListener("pointerout",stopDrawing),canvas.addEventListener("pointermove",draw),clearBtn.addEventListener("click",()=>{ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height)}),eraserBtn.addEventListener("click",()=>{isEraser=!isEraser,eraserBtn.classList.toggle("active",isEraser)}),submitArtBtn.addEventListener("click",async()=>{if(currentUsername)try{const e=canvas.toDataURL("image/png");submitArtBtn.disabled=!0,submitArtBtn.textContent="Saving...",await addDoc(artCollection,{username:currentUsername.toLowerCase(),imageData:e,createdAt:new Date}),alert("Your art has been saved to the memorial wall!"),showView(galleryView),loadAllArt()}catch(e){console.error("Error saving art:",e),alert("Sorry, could not save your art."),submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}else alert("An error occurred. Please go back and re-enter your username.")})}
+        });
     </script>
 </body>
 </html>
