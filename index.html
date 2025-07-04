@@ -10,16 +10,23 @@
 
     <div id="welcome-screen">
         <div class="welcome-content">
-            <img src="assets/images/succinctverse.png" alt="Succinct Verse Logo" id="welcome-logo">
+            <img src="assets/images/succinct-verse-logo.png" alt="Succinct Verse Logo" id="welcome-logo">
             <p class="enter-prompt">Click anywhere to enter</p>
         </div>
     </div>
-
+    
     <div id="main-app" class="hidden">
         <header class="top-menubar">
             <div class="menu-left"><span class="app-name">Succinct Verse</span></div>
             <div class="menu-right">
-                <div id="notification-widget"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6.414l-3.707 2.354A.5.5 0 0 1 2 15.914V2z"/></svg><span class="notification-badge"></span><div class="notification-dropdown"><div class="dropdown-header">Notifications</div><ul id="notification-list"></ul></div></div>
+                <div id="notification-widget">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6.414l-3.707 2.354A.5.5 0 0 1 2 15.914V2z"/></svg>
+                    <span class="notification-badge"></span>
+                    <div class="notification-dropdown">
+                        <div class="dropdown-header">Notifications</div>
+                        <ul id="notification-list"></ul>
+                    </div>
+                </div>
                 <div class="cpu-widget"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M9 2v2H7V2H5v2H4a2 2 0 0 0-2 2v2h2v8H2v2a2 2 0 0 0 2 2h1v2h2v-2h2v2h2v-2h8v2h2v-2h2a2 2 0 0 0 2-2v-2h-2V8h2V6a2 2 0 0 0-2-2h-1V2h-2v2h-2V2h-2v2H9V2H7zm0 4h8v12H7V6z"/></svg><div class="cpu-bar-container"><div class="cpu-bar"></div></div></div>
                 <span id="date-widget"></span><span id="clock">10:10</span>
             </div>
@@ -46,7 +53,7 @@
         <div class="modal-content">
             <button id="close-sp1-modal" class="modal-close-btn">&times;</button>
             <h2>SP1 Verifier Demo</h2>
-            <p>Look at how a ZK proof is made.</p>
+            <p>An educational look at how a ZK proof is made.</p>
             <div id="sp1-educational-console" class="console"></div>
         </div>
     </div>
@@ -91,7 +98,7 @@
     </div>
 
     <script type="module">
-        // ===== 1. KONEKSI FIREBASE (GANTI DENGAN KUNCI ANDA) =====
+        // ===== 1. KONEKSI FIREBASE (TIDAK BERUBAH) =====
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
         
@@ -125,16 +132,16 @@
             // --- PENGONTROL POPUP UMUM ---
             function setupModal(t,o,n,a){const d=document.getElementById(t),i=document.getElementById(o),c=document.getElementById(n);if(d&&i&&c){const t=()=>{i.classList.remove("hidden"),i.classList.add("visible"),a&&a()},o=()=>{i.classList.remove("visible"),setTimeout(()=>i.classList.add("hidden"),300)};d.addEventListener("click",t),c.addEventListener("click",o),i.querySelector(".modal-overlay").addEventListener("click",o)}}
 
-            // --- LOGIKA SP1 VERIFIER (VERSI EDUKATIF) ---
+            // --- LOGIKA SP1 VERIFIER (VERSI EDUKATIF DETAIL) ---
             const eduConsole = document.getElementById("sp1-educational-console");
             async function runEducationalAnimation() {
                 if (!eduConsole) return;
                 eduConsole.innerHTML = '';
                 const delay = ms => new Promise(res => setTimeout(res, ms));
                 const steps = [
-                    { title: 'Initializing ZKVM...', desc: 'Preparing the Zero-Knowledge Virtual Machine to run our program.' },
-                    { title: 'Compiling program...', desc: 'Translating Rust code into verifiable instructions.' },
-                    { title: 'Generating proof...', desc: 'Creating a compact cryptographic proof from the execution trace.'},
+                    { title: 'Initializing ZKVM...', desc: 'Preparing the Zero-Knowledge Virtual Machine to run our program.'},
+                    { title: 'Compiling program...', desc: 'Translating Rust code into verifiable instructions.'},
+                    { title: 'Generating proof...', desc: 'Creating a compact cryptographic proof from the full execution trace.'},
                     { title: '✅ Execution Verified.', desc: 'The proof is valid! The program ran correctly.' }
                 ];
                 for (const step of steps) {
@@ -149,90 +156,8 @@
             }
             setupModal("open-sp1-verifier", "sp1-verifier-modal", "close-sp1-modal", runEducationalAnimation);
 
-            // --- LOGIKA COMMUNITY BOARD ---
-            const galleryView = document.getElementById('gallery-view');
-            const usernameView = document.getElementById('username-view');
-            const drawingView = document.getElementById('drawing-view');
-            const addArtBtn = document.getElementById('add-your-art-btn');
-            const backToGalleryBtn1 = document.getElementById('back-to-gallery-btn-from-username');
-            const backToUsernameBtn = document.getElementById('back-to-username-btn');
-            const galleryContainer = document.getElementById('art-gallery-container');
-            const usernameInput = document.getElementById('username-input');
-            const continueBtn = document.getElementById('continue-to-draw-btn');
-            const usernameDisplay = document.getElementById('username-display');
-            const canvas = document.getElementById('drawing-canvas');
-            let currentUsername = '';
-
-            function showView(viewToShow) {
-                [galleryView, usernameView, drawingView].forEach(v => v.classList.add('hidden'));
-                viewToShow.classList.remove('hidden');
-            }
-
-            addArtBtn.addEventListener('click', () => showView(usernameView));
-            backToGalleryBtn1.addEventListener('click', () => showView(galleryView));
-            backToUsernameBtn.addEventListener('click', () => showView(usernameView));
-            
-            continueBtn.addEventListener('click', async () => {
-                const username = usernameInput.value.trim();
-                if (!username) { alert('Please enter a username.'); return; }
-                const q = query(artCollection, where("username", "==", username.toLowerCase()), limit(1));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    alert(`Username @${username} has already submitted art. Please choose another.`);
-                } else {
-                    currentUsername = username;
-                    usernameDisplay.textContent = `@${currentUsername}`;
-                    setupCanvas();
-                    showView(drawingView);
-                }
-            });
-
-            async function loadAllArt() {
-                galleryContainer.innerHTML = '<p class="loading-text">Loading memorial wall...</p>';
-                try {
-                    const q = query(artCollection, orderBy("createdAt", "desc"));
-                    const querySnapshot = await getDocs(q);
-                    galleryContainer.innerHTML = '';
-                    if (querySnapshot.empty) {
-                        galleryContainer.innerHTML = '<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';
-                    } else {
-                        querySnapshot.forEach(doc => {
-                            const art = doc.data();
-                            const artPiece = document.createElement('div');
-                            artPiece.className = 'art-piece';
-                            const img = new Image();
-                            img.src = art.imageData;
-                            const userLabel = document.createElement('span');
-                            userLabel.className = 'art-username';
-                            userLabel.textContent = `@${art.username}`;
-                            artPiece.appendChild(img);
-                            artPiece.appendChild(userLabel);
-                            galleryContainer.appendChild(artPiece);
-                        });
-                    }
-                } catch (error) {
-                    console.error("Failed to load art:", error);
-                    galleryContainer.innerHTML = '<p class="loading-text">Could not load the memorial wall. Please try again later.</p>';
-                }
-            }
-
-            setupModal('open-community-board', 'community-board-modal', 'close-community-modal', () => {
-                showView(galleryView);
-                loadAllArt();
-            });
-
-            if (canvas) {
-                const ctx = canvas.getContext('2d'), colorPicker = document.getElementById('colorPicker'), brushSize = document.getElementById('brushSize'), eraserBtn = document.getElementById('eraserBtn'), clearBtn = document.getElementById('clearBtn'), submitArtBtn = document.getElementById('submitArtBtn');
-                let isDrawing = !1, isEraser = !1;
-                function setupCanvas() { const e = canvas.parentElement; canvas.width = e.clientWidth, canvas.height = 400, ctx.fillStyle = "white", ctx.fillRect(0, 0, canvas.width, canvas.height), ctx.lineJoin = "round", ctx.lineCap = "round", submitArtBtn.disabled = !1, submitArtBtn.textContent = "Lock In Your Art", canvas.style.pointerEvents = "auto" }
-                function startDrawing(e) { isDrawing = !0, draw(e) }
-                function stopDrawing() { isDrawing = !1, ctx.beginPath() }
-                function draw(e) { if (isDrawing) { e.preventDefault(); const t = canvas.getBoundingClientRect(), o = (e.clientX || e.touches[0].clientX) - t.left, n = (e.clientY || e.touches[0].clientY) - t.top; ctx.lineWidth = brushSize.value, ctx.strokeStyle = isEraser ? "white" : colorPicker.value, ctx.lineTo(o, n), ctx.stroke(), ctx.beginPath(), ctx.moveTo(o, n) } }
-                canvas.addEventListener("pointerdown", startDrawing), canvas.addEventListener("pointerup", stopDrawing), canvas.addEventListener("pointerout", stopDrawing), canvas.addEventListener("pointermove", draw);
-                clearBtn.addEventListener("click", () => { ctx.fillStyle = "white", ctx.fillRect(0, 0, canvas.width, canvas.height) });
-                eraserBtn.addEventListener("click", () => { isEraser = !isEraser, eraserBtn.classList.toggle("active", isEraser) });
-                submitArtBtn.addEventListener("click", async () => { if (currentUsername) try { const e = canvas.toDataURL("image/png"); submitArtBtn.disabled = !0, submitArtBtn.textContent = "Saving...", await addDoc(artCollection, { username: currentUsername.toLowerCase(), imageData: e, createdAt: new Date }), alert("Your art has been saved to the memorial wall!"), showView(galleryView), loadAllArt() } catch (e) { console.error("Error saving art:", e), alert("Sorry, could not save your art."), submitArtBtn.disabled = !1, submitArtBtn.textContent = "Lock In Your Art" } else alert("An error occurred. Please go back and re-enter your username.") });
-            }
+            // --- LOGIKA COMMUNITY BOARD (TIDAK BERUBAH) ---
+            const galleryView=document.getElementById("gallery-view"),usernameView=document.getElementById("username-view"),drawingView=document.getElementById("drawing-view"),addArtBtn=document.getElementById("add-your-art-btn"),backToGalleryBtn1=document.getElementById("back-to-gallery-btn-from-username"),backToUsernameBtn=document.getElementById("back-to-username-btn"),galleryContainer=document.getElementById("art-gallery-container"),usernameInput=document.getElementById("username-input"),continueBtn=document.getElementById("continue-to-draw-btn"),usernameDisplay=document.getElementById("username-display"),canvas=document.getElementById("drawing-canvas");let currentUsername="";function showView(e){[galleryView,usernameView,drawingView].forEach(t=>t.classList.add("hidden")),e.classList.remove("hidden")}addArtBtn.addEventListener("click",()=>showView(usernameView)),backToGalleryBtn1.addEventListener("click",()=>showView(galleryView)),backToUsernameBtn.addEventListener("click",()=>showView(usernameView)),continueBtn.addEventListener("click",async()=>{const e=usernameInput.value.trim();if(e){const t=query(artCollection,where("username","==",e.toLowerCase()),limit(1));(await getDocs(t)).empty?(currentUsername=e,usernameDisplay.textContent=`@${currentUsername}`,setupCanvas(),showView(drawingView)):alert(`Username @${e} has already submitted art. Please choose another.`)}else alert("Please enter a username.")});async function loadAllArt(){galleryContainer.innerHTML='<p class="loading-text">Loading memorial wall...</p>';try{const e=await getDocs(query(artCollection,orderBy("createdAt","desc")));if(galleryContainer.innerHTML="",e.empty)galleryContainer.innerHTML='<p class="loading-text">The wall is empty. Be the first to leave a mark!</p>';else{e.forEach(e=>{const t=e.data(),o=document.createElement("div");o.className="art-piece";const n=new Image;n.src=t.imageData;const a=document.createElement("span");a.className="art-username",a.textContent=`@${t.username}`,o.appendChild(n),o.appendChild(a),galleryContainer.appendChild(o)})}}catch(e){console.error("Failed to load art:",e),galleryContainer.innerHTML='<p class="loading-text">Could not load the memorial wall. Please try again later.'}}setupModal("open-community-board","community-board-modal","close-community-modal",()=>{showView(galleryView),loadAllArt()});if(canvas){const ctx=canvas.getContext("2d"),colorPicker=document.getElementById("colorPicker"),brushSize=document.getElementById("brushSize"),eraserBtn=document.getElementById("eraserBtn"),clearBtn=document.getElementById("clearBtn"),submitArtBtn=document.getElementById("submitArtBtn");let isDrawing=!1,isEraser=!1;function setupCanvas(){const e=canvas.parentElement;canvas.width=e.clientWidth,canvas.height=400,ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height),ctx.lineJoin="round",ctx.lineCap="round",submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art",canvas.style.pointerEvents="auto"}function startDrawing(e){isDrawing=!0,draw(e)}function stopDrawing(){isDrawing=!1,ctx.beginPath()}function draw(e){if(isDrawing){e.preventDefault();const t=canvas.getBoundingClientRect(),o=(e.clientX||e.touches[0].clientX)-t.left,n=(e.clientY||e.touches[0].clientY)-t.top;ctx.lineWidth=brushSize.value,ctx.strokeStyle=isEraser?"white":colorPicker.value,ctx.lineTo(o,n),ctx.stroke(),ctx.beginPath(),ctx.moveTo(o,n)}}canvas.addEventListener("pointerdown",startDrawing),canvas.addEventListener("pointerup",stopDrawing),canvas.addEventListener("pointerout",stopDrawing),canvas.addEventListener("pointermove",draw),clearBtn.addEventListener("click",()=>{ctx.fillStyle="white",ctx.fillRect(0,0,canvas.width,canvas.height)}),eraserBtn.addEventListener("click",()=>{isEraser=!isEraser,eraserBtn.classList.toggle("active",isEraser)}),submitArtBtn.addEventListener("click",async()=>{if(currentUsername)try{const e=canvas.toDataURL("image/png");submitArtBtn.disabled=!0,submitArtBtn.textContent="Saving...",await addDoc(artCollection,{username:currentUsername.toLowerCase(),imageData:e,createdAt:new Date}),alert("Your art has been saved to the memorial wall!"),showView(galleryView),loadAllArt()}catch(e){console.error("Error saving art:",e),alert("Sorry, could not save your art."),submitArtBtn.disabled=!1,submitArtBtn.textContent="Lock In Your Art"}else alert("An error occurred. Please go back and re-enter your username.")})}
         });
     </script>
 </body>
