@@ -194,3 +194,16 @@ body {
         gap: 10px;
     }
 }
+/* ===== 12. SP1 TERMINAL RUN ANIMATION ===== */
+.console-line .status {
+    color: #00FF41; /* Warna hijau untuk status OK */
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.console-line .spinner {
+    display: inline-block;
+    width: 1ch; /* Lebar satu karakter */
+    text-align: left;
+    padding-left: 10px;
+}
