@@ -338,3 +338,52 @@ body {
     border-color: #00FF41;
     transition: all 0.1s ease-in-out;
 }
+/* ===== 11. SP1 EDUCATIONAL DEMO STYLES ===== */
+#sp1-educational-console .step {
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#sp1-educational-console .step.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+#sp1-educational-console .step-title {
+    color: #00FF41; /* Warna hijau terminal */
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+#sp1-educational-console .step-desc {
+    font-size: 13px;
+    color: #bbb;
+    margin-left: 20px;
+    max-width: 90%;
+}
+.code-block, .trace-block {
+    background-color: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0 10px 20px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+}
+.trace-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.8s ease-in-out;
+}
+.trace-block.proof {
+    height: 30px; /* Menyusut */
+    background-color: var(--accent-pink);
+    border-color: var(--accent-pink);
+    color: white;
+    font-weight: bold;
+}
+#final-metrics {
+    color: var(--accent-pink);
+    font-weight: bold;
+}
