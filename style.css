@@ -141,7 +141,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    transition: all 0.8s ease-in-out;
+    transition: all 1.3s ease-in-out;
     height: 100px; /* <--- TAMBAHKAN BARIS INI */
 }
 .trace-block.proof { height: 30px; background-color: var(--accent-pink); border-color: var(--accent-pink); color: white; font-weight: bold;}
