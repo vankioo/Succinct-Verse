@@ -4,33 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Succinct Verse</title>
+    <link rel="stylesheet" type="text/css" href="assets/flaticon/flaticon.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-   <div id="welcome-screen">
-    <div class="welcome-content">
-        <img src="assets/images/succinctverse.png" alt="Succinct Verse Logo" id="welcome-logo">
-        <p class="enter-prompt">Click anywhere to enter</p>
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <img src="assets/images/succinct-verse-logo.png" alt="Succinct Verse Logo" id="welcome-logo">
+            <p class="enter-prompt">Click anywhere to enter</p>
+        </div>
     </div>
-</div>
     
     <div id="main-app" class="hidden">
-        </div>
-
+        <header class="top-menubar">
+            <div class="menu-left"><span class="app-name">Succinct Verse</span></div>
+            <div class="menu-right">
+                <div id="notification-widget"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6.414l-3.707 2.354A.5.5 0 0 1 2 15.914V2z"/></svg><span class="notification-badge"></span><div class="notification-dropdown"><div class="dropdown-header">Notifications</div><ul id="notification-list"></ul></div></div>
+                <div class="cpu-widget"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M9 2v2H7V2H5v2H4a2 2 0 0 0-2 2v2h2v8H2v2a2 2 0 0 0 2 2h1v2h2v-2h2v2h2v-2h8v2h2v-2h2a2 2 0 0 0 2-2v-2h-2V8h2V6a2 2 0 0 0-2-2h-1V2h-2v2h-2V2h-2v2H9V2H7zm0 4h8v12H7V6z"/></svg><div class="cpu-bar-container"><div class="cpu-bar"></div></div></div>
+                <span id="date-widget"></span><span id="clock">10:10</span>
+            </div>
+        </header>
+        <main class="desktop">
+            <a href="https://succinct-network.vercel.app/" target="_blank" class="desktop-icon"><img src="assets/images/icon1.png" alt="ZK Constellation"><span>ZK Constellation</span></a>
+            <a href="#" target="_blank" class="desktop-icon"><img src="assets/images/icon3.png" alt="Proof of Synergy"><span>Proof of Synergy</span></a>
+            <a href="https://succinct-zk-forge.vercel.app/" target="_blank" class="desktop-icon"><img src="assets/images/icon2.png" alt="ZK Forge"><span>ZK Forge</span></a>
+        </main>
+        <footer class="dock">
+            <div class="dock-container">
+                <a href="javascript:void(0);" id="open-community-board" class="dock-item" title="Community Board"><img src="assets/images/icon-board.png" alt="Community Board"><span>Community Board</span></a>
+                <a href="javascript:void(0);" id="open-sp1-verifier" class="dock-item" title="SP1 Verifier"><img src="assets/images/icon-verifier.png" alt="SP1 Verifier"><span>SP1 Verifier</span></a>
+                <div class="separator"></div>
+                <a href="https://twitter.com/vankioo" target="_blank" class="dock-item" title="Twitter/X"><img src="assets/images/icon-twitter.png" alt="Twitter/X"><span>Twitter/X</span></a>
+                <a href="https://discord.gg/succinctlabs" target="_blank" class="dock-item" title="Discord"><img src="assets/images/icon-discord.png" alt="Discord"><span>Discord</span></a>
+            </div>
+        </footer>
+    </div>
+    
     <audio id="background-music" src="assets/backsound.mp3" loop></audio>
 
     <script type="module">
-        // ===== SEMUA LOGIKA JAVASCRIPT =====
+        // ===== 1. KONEKSI FIREBASE (TIDAK BERUBAH) =====
+        // ... (kode koneksi Firebase Anda) ...
+
+        // ===== 2. SEMUA LOGIKA DIMASUKKAN DALAM SATU EVENT LISTENER INI =====
         document.addEventListener('DOMContentLoaded', function() {
-            
             // --- LOGIKA UNTUK WELCOME SCREEN & MUSIK ---
             const welcomeScreen = document.getElementById('welcome-screen');
+            const mainApp = document.getElementById('main-app');
+            const music = document.getElementById('background-music');
+
             if (welcomeScreen) {
                 welcomeScreen.addEventListener('click', () => {
-                    const music = document.getElementById('background-music');
-                    const mainApp = document.getElementById('main-app');
-                    
                     // Logika musik dipicu di sini
                     if (music) {
                         music.volume = 0.3;
@@ -44,7 +69,11 @@
                 }, { once: true }); // {once: true} agar hanya bisa diklik sekali
             }
 
-            // ... (Semua sisa kode JavaScript untuk notifikasi, jam, popup, dll.) ...
+            // --- KODE UI DASAR (NOTIFIKASI, JAM) ---
+            const chatNotifications=[{name:"Yinger UwU",photo:"assets/images/yinger.png",message:"Dont forget succinct rockstars!"},{name:"Addyyeah",photo:"assets/images/addy.jpg",message:"Mainnet soon yeahh"},{name:"Zaharon bruhh",photo:"assets/images/zaharon.jpg",message:"Log in bruhh, lets play together"},{name:"Duskieee",photo:"assets/images/duskie.jpg",message:"Thanks for joining!"}];function showRandomNotifications(){const e=document.getElementById("notification-list");if(e){e.innerHTML="";const t=chatNotifications.sort(()=>.5-Math.random())[0];t&&(e.innerHTML=`<li class="notification-item"><img src="${t.photo}" alt="${t.name}"><div class="notification-content"><p>${t.name}</p><span>${t.message}</span></div></li>`)}}function updateDateTime(){const e=new Date,t=document.getElementById("clock"),o=document.getElementById("date-widget");t&&(t.textContent=e.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:!1})),o&&(o.textContent=e.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))}showRandomNotifications(),updateDateTime(),setInterval(updateDateTime,1e3);
+
+            // --- PENGATURAN SEMUA POPUP/MODAL ---
+            // ... (Semua logika popup Anda tetap sama) ...
         });
     </script>
 </body>
