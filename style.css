@@ -303,3 +303,33 @@ body {
 #submitArtBtn { /* Ini akan menargetkan tombol Lock Art di dalam .drawing-actions */
     flex-grow: 1; /* Membuat tombol ini mengisi sisa ruang */
 }
+/* ===== 10. SP1 VERIFIER ANIMATION STYLES ===== */
+
+/* Efek ketik untuk setiap baris */
+.console-line.typing {
+    display: inline-block; /* Diperlukan untuk animasi width */
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid #00FF41; /* Ini adalah kursor yang berkedip */
+    animation: typing 1.5s steps(30, end), 
+               blink-caret 0.75s step-end infinite;
+}
+
+/* Animasi mengetik (dari lebar 0% ke 100%) */
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Animasi kursor berkedip */
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: #00FF41; }
+}
+
+/* Efek 'glow' saat verifikasi berhasil */
+.console.success-glow {
+    box-shadow: 0 0 15px #00FF41, 0 0 30px rgba(0, 255, 65, 0.5);
+    border-color: #00FF41;
+    transition: all 0.1s ease-in-out;
+}
