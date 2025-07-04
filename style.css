@@ -114,7 +114,7 @@ body {
 .dock-container { background: var(--dock-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 8px; display: flex; align-items: flex-end; gap: 8px;}
 .dock-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 75px; height: 70px; text-decoration: none; color: var(--text-primary); transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); padding-top: 5px; cursor: pointer;}
 .dock-item img { width: 45px; height: 45px; margin-bottom: 5px; object-fit: contain; }
-.dock-item span { font-size: 11px; font-family: 'Inter', 'Segoe UI', sans-serif; white-space: nowrap; }
+.dock-item span { font-size: 8px; font-family: 'Inter', 'Segoe UI', sans-serif; white-space: nowrap; }
 .dock-item:hover { transform: translateY(-10px) scale(1.2); }
 .separator { width: 1px; height: 45px; background-color: rgba(255, 255, 255, 0.3); margin: 0 5px; align-self: center;}
 
