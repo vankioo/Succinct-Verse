@@ -211,11 +211,29 @@ body {
     .menu-left > span:not(.app-name), #date-widget { display: none; }
     .top-menubar { padding: 0 10px; }
     #welcome-logo { max-width: 280px; } /* Ukuran logo di mobile */
-    .dock-container { width: 95%; gap: 5px; justify-content: center; flex-wrap: wrap; padding: 5px; }
-    .dock-item { width: 65px; height: 60px; }
-    .dock-item img { width: 35px; height: 35px; }
-    .dock-item span { font-size: 10px; }
-    .separator { display: none; }
+    @media (max-width: 768px) {
+    /* Dock adjustments */
+    .dock-container {
+        width: 95%;
+        gap: 5px;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 5px;
+    }
+    .dock-item {
+        width: 65px;
+        height: 60px;
+    }
+    .dock-item img {
+        width: 35px;
+        height: 35px;
+    }
+    .dock-item span {
+        font-size: 10px;
+    }
+    .separator {
+        display: none; /* Hide the separator on mobile */
+    }
     .modal-content { padding: 15px; }
     .modal-content.wide { max-width: 100%; }
     .modal-content h2 { font-size: 1.5em; }
