@@ -184,3 +184,108 @@ body {
     .gallery-header, .drawing-actions { flex-direction: column; }
     #art-gallery-container { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
 }
+/* ===== REFINED STYLES FOR COMMUNITY BOARD ===== */
+
+/* Makes the popup title and description look better */
+#community-board-modal .modal-content h2 {
+    margin-bottom: 5px;
+}
+#community-board-modal .modal-content > p {
+    margin-top: 0;
+    color: var(--text-secondary);
+    font-size: 1em;
+    margin-bottom: 20px;
+}
+
+/* Styles the toolbar for drawing tools */
+.tools {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-sizing: border-box;
+}
+.tools label {
+    font-weight: 500;
+}
+.tools input[type="color"] {
+    border: 2px solid #555;
+    border-radius: 8px;
+    width: 35px;
+    height: 35px;
+}
+.tools input[type="range"] {
+    flex-grow: 1;
+    max-width: 150px;
+}
+
+/* Base style for tools buttons */
+.tools button {
+    background: #333;
+    color: var(--text-secondary);
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect for tools buttons */
+.tools button:hover {
+    border-color: var(--accent-pink);
+    color: white;
+}
+
+/* Click effect for all tools buttons */
+.tools button:active {
+    transform: scale(0.95);
+}
+
+/* -- ERASER ON/OFF EFFECTS -- */
+
+/* "ON" state for the Eraser button */
+.tools button.active {
+    background-color: var(--accent-pink);
+    color: white;
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 10px var(--accent-pink);
+}
+
+/* Styles the bottom action buttons */
+.drawing-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* 'Back' button style */
+#back-to-username-btn {
+    background: none;
+    border: 1px solid #888;
+    color: #888;
+    padding: 15px;
+    border-radius: 12px;
+    flex-basis: 30%; /* Set a base width */
+    text-align: center;
+}
+#back-to-username-btn:hover {
+    border-color: white;
+    color: white;
+}
+
+/* 'Lock In Your Art' button style */
+#submitArtBtn {
+    flex-grow: 1; /* Makes this button larger */
+    padding: 15px;
+    border-radius: 12px;
+}
