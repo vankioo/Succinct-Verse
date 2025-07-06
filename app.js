@@ -143,16 +143,15 @@
                 view.classList.remove("hidden");
             }
 
-           // Cari fungsi ini di dalam JavaScript Anda
+        
 function setupCanvas() {
     const area = canvas.parentElement;
     canvas.width = area.clientWidth;
     
     
-    // DENGAN BARIS BARU INI:
-    canvas.height = canvas.width * (3 / 4); // Membuat tinggi kanvas 3/4 dari lebarnya (rasio 4:3)
+ 
+    canvas.height = canvas.width * (3 / 4); // (rasio 4:3)
 
-    // Sisa kodenya tetap sama
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.lineJoin = 'round';
