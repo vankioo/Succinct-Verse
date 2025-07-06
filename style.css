@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono&display=swap');
 
 :root {
-    --background-image: url('assets/images/background.jpg'); /* Ganti dengan gambar background Anda */
+    --background-image: url('assets/images/background.jpg'); 
     --text-primary: #FFFFFF;
     --text-secondary: #E0E0E0;
     --dock-bg: rgba(255, 255, 255, 0.1);
@@ -47,7 +47,7 @@ body {
 }
 #welcome-logo {
     width: 80%;
-    max-width: 350px; /* Ukuran logo dikecilkan */
+    max-width: 350px; /* Ukuran logo */
     height: auto;
     animation: float 4s ease-in-out infinite;
 }
@@ -138,7 +138,7 @@ body {
 .gallery-header { display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #444; }
 .gallery-header p { margin: 0; text-align: center; }
 .submit-art-btn.small { padding: 10px 20px; font-size: 1em; margin-top: 0; width: 100%;}
-/* GANTI BAGIAN INI DI FILE style.css ANDA */
+
 
 #art-gallery-container {
     display: grid;
@@ -156,14 +156,14 @@ body {
     border: 2px solid #555;
     background-color: #0d0d0d;
     
-    /* KUNCI UTAMA: Membuat bingkai memiliki rasio 4:3 */
+    /* Membuat bingkai memiliki rasio 4:3 */
     aspect-ratio: 4 / 3; 
 }
 
 .art-piece img {
     width: 100%;
     height: 100%;
-    /* Pastikan gambar mengisi bingkai tanpa terdistorsi */
+   
     object-fit: contain; 
 }
 
@@ -211,7 +211,7 @@ body {
     .menu-left > span:not(.app-name), #date-widget { display: none; }
     .top-menubar { padding: 0 10px; }
     #welcome-logo { max-width: 280px; } /* Ukuran logo di mobile */
-    /* Dock adjustments */
+ 
   .dock-container {
         /* Membatasi lebar agar tidak keluar layar dan bisa di-scroll */
         max-width: 95vw; 
